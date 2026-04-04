@@ -1,0 +1,2999 @@
+
+<style>
+
+:root {
+  --cream: #fdf8f2;
+  --warm-white: #faf5ee;
+  --parchment: #f5ede0;
+  --blush: #e8c4b2;
+  --dusty-rose: #c9968a;
+  --mauve: #9b7b78;
+  --sage: #8a9e8c;
+  --sage-light: #b5c9b7;
+  --gold: #c9a96e;
+  --gold-light: #e8d5a3;
+  --teal: #7aaea8;
+  --lavender: #b8a9c9;
+  --olive: #7a8c5e;
+  --dark: #2d2520;
+  --text: #3d3330;
+  --muted: #8a7570;
+
+  /* Girl colors */
+  --tired: #c9968a;
+  --healing: #8ab5c9;
+  --broke: #c9b08a;
+  --returning: #a8c98a;
+  --caregiving: #c98ab5;
+  --quiet: #8a8ac9;
+  --boundary: #c9a98a;
+  --leveling: #8ac9a9;
+  --vision: #c9c08a;
+  --soft: #c98a8a;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  font-family: 'Jost', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ACCESS GATE ── */
+#access-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cream);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.gate-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 20%, rgba(201,150,138,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 80%, rgba(138,181,201,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(201,169,110,0.08) 0%, transparent 70%);
+}
+
+/* SVG floral decorations */
+.floral-tl, .floral-br {
+  position: absolute;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.floral-tl { top: -20px; left: -20px; width: 280px; }
+.floral-br { bottom: -20px; right: -20px; width: 280px; transform: rotate(180deg); }
+
+.gate-card {
+  position: relative;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.gate-brand { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.gate-title { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: var(--dark); line-height: 1.15; margin-bottom: 0.3rem; }
+.gate-title em { font-style: italic; color: var(--dusty-rose); }
+.gate-sub { font-family: 'Dancing Script', cursive; font-size: 20px; color: var(--mauve); margin-bottom: 1.5rem; }
+.gold-line { width: 50px; height: 1px; background: var(--gold); margin: 1rem auto; }
+.gate-desc { font-size: 13px; line-height: 1.8; color: var(--muted); margin-bottom: 1.5rem; }
+
+.gate-input-wrap { position: relative; margin-bottom: 1rem; }
+.gate-input {
+  width: 100%;
+  padding: 14px 20px;
+  border: 1px solid rgba(201,169,110,0.4);
+  border-radius: 40px;
+  background: var(--warm-white);
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  color: var(--dark);
+  text-align: center;
+  letter-spacing: 3px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.gate-input:focus { border-color: var(--gold); }
+.gate-input::placeholder { letter-spacing: 1px; color: var(--muted); }
+
+.gate-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--dark);
+  color: var(--cream);
+  border: none;
+  border-radius: 40px;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.gate-btn:hover { background: var(--dusty-rose); }
+.gate-error { color: var(--dusty-rose); font-size: 12px; margin-top: 0.5rem; display: none; }
+.gate-note { font-size: 11px; color: var(--muted); margin-top: 1rem; }
+.gate-note a { color: var(--gold); text-decoration: none; }
+
+/* ── MAIN APP ── */
+#app { display: none; }
+
+/* Top bar */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(253,248,242,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 0.5px solid rgba(201,169,110,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 100;
+}
+
+.topbar-brand {
+  font-family: 'Dancing Script', cursive;
+  font-size: 22px;
+  color: var(--dark);
+}
+.topbar-brand span { color: var(--dusty-rose); }
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-btn {
+  background: none;
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.menu-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 60px; left: 0;
+  width: 280px;
+  height: calc(100vh - 60px);
+  background: var(--warm-white);
+  border-right: 0.5px solid rgba(201,169,110,0.2);
+  overflow-y: auto;
+  padding: 1.5rem 0;
+  z-index: 90;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-section { padding: 0 1rem 1rem; }
+.sidebar-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 0.5rem 0.5rem 0.3rem; }
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+.sidebar-item:hover { background: var(--parchment); }
+.sidebar-item.active { background: var(--parchment); }
+
+.girl-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.sidebar-item-text { font-size: 13px; color: var(--text); }
+
+/* Main content */
+.main-content {
+  margin-top: 60px;
+  padding: 2rem 1.5rem;
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: calc(100vh - 60px);
+  transition: margin-left 0.3s;
+}
+
+/* ── HOME PAGE ── */
+.home-hero {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  position: relative;
+}
+
+.home-eyebrow { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+.home-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 8vw, 62px); font-weight: 300; color: var(--dark); line-height: 1.1; margin-bottom: 0.5rem; }
+.home-title em { font-style: italic; color: var(--dusty-rose); }
+.home-script { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--mauve); margin-bottom: 1.5rem; }
+
+.dedication {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 500px;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  border-left: 2px solid var(--gold-light);
+}
+
+.girls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 2rem 0;
+}
+
+.girl-card {
+  border-radius: 14px;
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid transparent;
+}
+
+.girl-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.1); }
+
+.girl-card-letter {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.25;
+  position: absolute;
+  top: 8px; right: 14px;
+  line-height: 1;
+}
+
+.girl-card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 0.3rem;
+}
+
+.girl-card-desc {
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.girl-card-arrow {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  display: block;
+}
+
+/* ── CHAPTER VIEW ── */
+.chapter-view { display: none; animation: fadeUp 0.4s ease; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chapter-hero {
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.chapter-the { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; opacity: 0.7; margin-bottom: 0.3rem; font-family: 'Jost', sans-serif; }
+.chapter-name-display {
+  font-family: 'Dancing Script', cursive;
+  font-size: clamp(42px, 8vw, 64px);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.chapter-tagline { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; opacity: 0.8; }
+
+/* Chapter navigation tabs */
+.chapter-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 0.5px solid rgba(201,169,110,0.2);
+}
+
+.chapter-tab {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: transparent;
+  color: var(--muted);
+  font-family: 'Jost', sans-serif;
+  transition: all 0.2s;
+}
+.chapter-tab.active, .chapter-tab:hover {
+  background: var(--dark);
+  color: var(--cream);
+  border-color: var(--dark);
+}
+
+/* Content sections */
+.content-section { display: none !important; }
+.content-section.active { display: block !important; animation: fadeUp 0.3s ease; }
+
+/* Permission slip */
+.permission-slip {
+  background: var(--warm-white);
+  border: 1px solid var(--gold-light);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.permission-slip::before {
+  content: 'PERMISSION SLIP';
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  display: block;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.permission-name-field {
+  border: none;
+  border-bottom: 1px solid var(--blush);
+  background: transparent;
+  font-family: 'Dancing Script', cursive;
+  font-size: 18px;
+  color: var(--dark);
+  width: 60%;
+  padding: 4px 0;
+  outline: none;
+  text-align: center;
+}
+
+.permission-body { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; line-height: 1.8; text-align: center; margin: 1rem 0; }
+.permission-items { list-style: none; margin: 1rem 0; }
+.permission-items li { font-size: 14px; padding: 4px 0; color: var(--text); }
+.permission-items li::before { content: '✦ '; color: var(--gold); }
+
+.signature-row { display: flex; gap: 1rem; margin-top: 1.5rem; align-items: flex-end; justify-content: center; }
+.sig-field {
+  border: none;
+  border-bottom: 1px solid var(--blush);
+  background: transparent;
+  font-family: 'Dancing Script', cursive;
+  font-size: 16px;
+  color: var(--dark);
+  padding: 4px 0;
+  outline: none;
+  min-width: 140px;
+}
+.sig-label { font-size: 10px; letter-spacing: 1px; color: var(--muted); display: block; margin-bottom: 4px; }
+
+/* Devotion section */
+.devotion-scripture {
+  background: var(--parchment);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 12px 12px 0;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.devotion-scripture blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+.devotion-scripture cite { font-size: 12px; letter-spacing: 2px; color: var(--gold); }
+
+.devotion-body { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); margin: 1rem 0; }
+.devotion-reflection { background: var(--warm-white); border-radius: 12px; padding: 1.2rem 1.5rem; margin-top: 1.5rem; font-size: 14px; line-height: 1.7; color: var(--muted); font-style: italic; }
+
+/* Note from me */
+.note-from-me { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); }
+.note-signature { font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--dusty-rose); margin-top: 1rem; display: block; }
+
+/* Short story */
+.short-story { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); }
+.story-moral { background: var(--parchment); border-radius: 12px; padding: 1.2rem 1.5rem; margin-top: 1.5rem; font-style: italic; font-size: 15px; color: var(--mauve); border-left: 2px solid var(--gold); }
+
+/* Reflection questions */
+.reflection-intro { font-size: 13px; color: var(--muted); font-style: italic; line-height: 1.8; margin-bottom: 1.5rem; padding: 1rem; background: var(--warm-white); border-radius: 12px; }
+
+.reflection-question {
+  margin-bottom: 1.5rem;
+}
+
+.rq-number { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+.rq-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--dark); margin-bottom: 0.8rem; line-height: 1.4; }
+.rq-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px 16px;
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 12px;
+  background: var(--warm-white);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: var(--dark);
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  line-height: 1.7;
+}
+.rq-textarea:focus { border-color: var(--gold); }
+.rq-textarea::placeholder { color: var(--muted); font-style: italic; }
+
+/* Multiple choice */
+.mc-options { display: flex; flex-direction: column; gap: 8px; margin-top: 0.8rem; }
+.mc-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--warm-white);
+  font-size: 14px;
+  color: var(--text);
+}
+.mc-option:hover { border-color: var(--gold); }
+.mc-option.selected { border-color: var(--dusty-rose); background: rgba(201,150,138,0.1); }
+.mc-radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--blush); flex-shrink: 0; transition: all 0.2s; }
+.mc-option.selected .mc-radio { background: var(--dusty-rose); border-color: var(--dusty-rose); }
+
+/* Fill in blank */
+.fill-blank {
+  border: none;
+  border-bottom: 1px solid var(--blush);
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: var(--dark);
+  padding: 4px 8px;
+  outline: none;
+  min-width: 200px;
+  width: 100%;
+  margin: 4px 0;
+}
+.fill-blank:focus { border-bottom-color: var(--gold); }
+
+/* Affirmations */
+.affirmations-intro { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--mauve); text-align: center; margin-bottom: 1.5rem; }
+
+.affirmation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 0.5px solid rgba(201,169,110,0.15);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.affirmation-item:last-child { border-bottom: none; }
+
+.aff-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--blush);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 11px;
+  color: transparent;
+}
+
+.affirmation-item.checked .aff-check {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: white;
+}
+
+.aff-text { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.6; color: var(--text); }
+.affirmation-item.checked .aff-text { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--sage-light); }
+
+/* Playlist */
+.playlist-intro { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--mauve); text-align: center; margin-bottom: 1.5rem; }
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 0.5px solid rgba(201,169,110,0.15);
+}
+.playlist-item:last-child { border-bottom: none; }
+
+.music-note {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.song-info .song-title { font-size: 14px; font-weight: 500; color: var(--dark); }
+.song-info .song-artist { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* Dear Girl letter */
+.dear-letter {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.letter-salutation { font-family: 'Dancing Script', cursive; font-size: 28px; color: var(--dusty-rose); margin-bottom: 1rem; display: block; }
+.letter-closing { font-family: 'Dancing Script', cursive; font-size: 24px; color: var(--mauve); margin-top: 1.5rem; display: block; }
+.letter-signature { font-family: 'Dancing Script', cursive; font-size: 22px; color: var(--dusty-rose); display: block; }
+
+.letter-back-area {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--warm-white);
+  border-radius: 16px;
+  border: 1px solid rgba(201,169,110,0.2);
+}
+.letter-back-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--mauve); margin-bottom: 1rem; }
+.letter-back-textarea {
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: var(--dark);
+  resize: vertical;
+  outline: none;
+  line-height: 1.9;
+}
+.letter-back-textarea::placeholder { color: var(--muted); font-style: italic; }
+
+/* Quotes */
+.anon-quote {
+  background: var(--warm-white);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.7;
+  border-left: 2px solid var(--blush);
+}
+.anon-cite { font-style: normal; font-size: 12px; letter-spacing: 2px; color: var(--gold); display: block; margin-top: 0.5rem; }
+
+/* Gentle word */
+.gentle-word {
+  background: linear-gradient(135deg, rgba(201,150,138,0.1), rgba(201,169,110,0.1));
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  text-align: center;
+}
+.gentle-word p { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-style: italic; color: var(--mauve); line-height: 1.8; }
+.gentle-word strong { display: block; margin-top: 0.8rem; font-style: normal; font-size: 14px; color: var(--dusty-rose); letter-spacing: 1px; }
+
+/* Nav between chapters */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 0.5px solid rgba(201,169,110,0.2);
+}
+.nav-prev, .nav-next {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 10px 20px;
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 30px;
+  transition: all 0.2s;
+  background: none;
+  font-family: 'Jost', sans-serif;
+}
+.nav-prev:hover, .nav-next:hover { border-color: var(--gold); color: var(--gold); }
+
+/* ── BACK MATTER ── */
+.becoming-section { text-align: center; padding: 2rem 0; }
+.becoming-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 300; font-style: italic; color: var(--dark); margin-bottom: 1rem; }
+.becoming-body { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); max-width: 580px; margin: 0 auto 2rem; }
+
+.closing-prayer { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 2; color: var(--text); }
+
+/* About author */
+.author-card { display: flex; flex-direction: column; gap: 1.5rem; }
+.author-initial {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--parchment);
+  border: 2px solid var(--gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Dancing Script', cursive;
+  font-size: 36px;
+  color: var(--dusty-rose);
+  flex-shrink: 0;
+}
+.author-bio { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); }
+
+/* Chapter tracker */
+.tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 1.5rem; }
+.tracker-item {
+  background: var(--warm-white);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tracker-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.tracker-info { flex: 1; }
+.tracker-name { font-size: 14px; color: var(--dark); margin-bottom: 6px; }
+.tracker-visited, .tracker-date {
+  font-size: 11px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tracker-check {
+  width: 16px; height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--blush);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: transparent;
+  transition: all 0.2s;
+}
+.tracker-check.done { background: var(--sage); border-color: var(--sage); color: white; }
+.tracker-date-input {
+  border: none;
+  border-bottom: 1px solid var(--blush);
+  background: transparent;
+  font-size: 11px;
+  color: var(--muted);
+  width: 80px;
+  outline: none;
+}
+
+/* ── QUIZ SECTION ── */
+.quiz-launch {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: var(--warm-white);
+  border-radius: 20px;
+  border: 1px solid rgba(201,169,110,0.2);
+  margin: 1rem 0;
+}
+
+.quiz-launch-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 300; color: var(--dark); margin-bottom: 0.5rem; }
+.quiz-launch-sub { font-family: 'Dancing Script', cursive; font-size: 20px; color: var(--dusty-rose); margin-bottom: 1.5rem; }
+.quiz-launch-body { font-size: 14px; line-height: 1.8; color: var(--muted); max-width: 440px; margin: 0 auto 1.5rem; }
+.quiz-launch-btn {
+  display: inline-block;
+  background: var(--dark);
+  color: var(--cream);
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border-radius: 40px;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+.quiz-launch-btn:hover { background: var(--dusty-rose); }
+.quiz-note { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 0.5rem; }
+
+/* Results navigation */
+.results-nav { margin-top: 2rem; }
+.results-nav-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--dark); margin-bottom: 1rem; text-align: center; }
+.result-card-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--warm-white);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.result-card-nav:hover { border-color: var(--gold); transform: translateX(4px); }
+.result-letter { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-style: italic; font-weight: 500; color: var(--dark); min-width: 24px; }
+.result-girl-info { flex: 1; }
+.result-girl-name { font-size: 14px; font-weight: 500; color: var(--dark); margin-bottom: 2px; }
+.result-girl-desc { font-size: 12px; color: var(--muted); font-style: italic; }
+.result-go { font-size: 12px; color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+
+/* Footer */
+.app-footer { text-align: center; padding: 2rem; font-size: 11px; color: var(--muted); letter-spacing: 2px; border-top: 0.5px solid rgba(201,169,110,0.2); margin-top: 3rem; }
+.app-footer a { color: var(--gold); text-decoration: none; }
+
+/* Misc */
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; color: var(--dark); margin-bottom: 1.2rem; }
+.section-divider { width: 40px; height: 1px; background: var(--gold); margin: 1rem 0; }
+
+.prose { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.9; color: var(--text); }
+.prose p { margin-bottom: 1rem; }
+
+/* Mobile overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(45,37,32,0.4);
+  z-index: 85;
+}
+.sidebar-overlay.show { display: block; }
+
+@media (min-width: 768px) {
+  .sidebar { transform: translateX(0); }
+  .main-content { margin-left: 280px; }
+  .sidebar-overlay { display: none !important; }
+  .menu-btn { display: none; }
+}
+
+@media (max-width: 767px) {
+  .girls-grid { grid-template-columns: repeat(2, 1fr); }
+  .chapter-hero { padding: 2rem 1.5rem; }
+}
+
+/* ── WELCOME POPUP ── */
+.popup-overlay {
+  position: fixed; inset: 0;
+  background: rgba(45,37,32,0.6);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  animation: fadeInPop 0.3s ease;
+}
+@keyframes fadeInPop { from { opacity:0; } to { opacity:1; } }
+.popup-card {
+  background: var(--cream); border-radius: 20px;
+  padding: 2.5rem 2rem; max-width: 480px; width: 100%;
+  text-align: center; position: relative;
+  border: 1px solid rgba(201,169,110,0.3);
+  max-height: 90vh; overflow-y: auto;
+}
+.popup-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 18px; cursor: pointer; color: var(--muted); }
+.popup-title { font-family: "Dancing Script",cursive; font-size: 32px; color: var(--dusty-rose); margin-bottom: 0.5rem; }
+.popup-subtitle { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+.popup-feature { display: flex; align-items: flex-start; gap: 12px; text-align: left; padding: 10px 0; border-bottom: 0.5px solid rgba(201,169,110,0.15); }
+.popup-feature:last-of-type { border-bottom: none; }
+.popup-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.popup-feature-text { font-size: 13px; line-height: 1.7; color: var(--text); }
+.popup-feature-text strong { color: var(--dark); display: block; margin-bottom: 2px; }
+.popup-btn { display: block; margin-top: 1.5rem; background: var(--dark); color: var(--cream); font-family: "Jost",sans-serif; font-size: 12px; letter-spacing: 3px; text-transform: uppercase; padding: 14px 36px; border-radius: 40px; border: none; cursor: pointer; transition: all 0.3s; width: 100%; }
+.popup-btn:hover { background: var(--dusty-rose); }
+.save-indicator { position: fixed; bottom: 20px; right: 20px; background: var(--sage); color: white; font-size: 11px; letter-spacing: 1px; padding: 8px 16px; border-radius: 20px; opacity: 0; transition: opacity 0.3s; z-index: 150; pointer-events: none; }
+.save-indicator.show { opacity: 1; }
+.download-bar { display: flex; align-items: center; justify-content: space-between; background: var(--warm-white); border-radius: 12px; padding: 12px 16px; margin-bottom: 1.5rem; border: 1px solid rgba(201,169,110,0.2); flex-wrap: wrap; gap: 10px; }
+.download-bar-text { font-size: 12px; color: var(--muted); }
+.download-bar-text strong { color: var(--dark); display: block; font-size: 13px; }
+.download-btn { background: var(--dark); color: var(--cream); font-family: "Jost",sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 8px 18px; border-radius: 20px; border: none; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.download-btn:hover { background: var(--dusty-rose); }
+.faq-item { border-bottom: 0.5px solid rgba(201,169,110,0.2); }
+.faq-question { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; cursor: pointer; font-family: "Cormorant Garamond",serif; font-size: 17px; color: var(--dark); }
+.faq-question:hover { color: var(--dusty-rose); }
+.faq-arrow { font-size: 14px; transition: transform 0.2s; color: var(--gold); }
+.faq-answer { display: none; padding: 0 0 1rem; font-size: 14px; line-height: 1.8; color: var(--muted); }
+.faq-item.open .faq-answer { display: block; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+
+</style>
+
+
+<!-- ══════════════════════════════════════════
+     ACCESS GATE
+══════════════════════════════════════════ -->
+<div id="access-gate">
+  <div class="gate-bg"></div>
+
+  <!-- Floral SVG top left -->
+  <svg class="floral-tl" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="30" stroke="#c9968a" stroke-width="1.5" fill="none"/>
+    <circle cx="60" cy="60" r="12" fill="#c9968a" opacity="0.3"/>
+    <path d="M60 30 Q80 20 90 40 Q100 60 80 70 Q60 80 50 60 Q40 40 60 30Z" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.15)"/>
+    <path d="M20 80 Q10 60 30 50 Q50 40 55 60 Q60 80 40 85 Q20 90 20 80Z" stroke="#c9968a" stroke-width="1" fill="rgba(201,150,138,0.15)"/>
+    <line x1="60" y1="90" x2="60" y2="140" stroke="#8a9e8c" stroke-width="1.5"/>
+    <path d="M60 110 Q45 100 40 85" stroke="#8a9e8c" stroke-width="1" fill="none"/>
+    <path d="M60 120 Q75 110 80 95" stroke="#8a9e8c" stroke-width="1" fill="none"/>
+    <ellipse cx="40" cy="85" rx="12" ry="7" fill="rgba(138,158,140,0.3)" transform="rotate(-30 40 85)"/>
+    <ellipse cx="80" cy="95" rx="12" ry="7" fill="rgba(138,158,140,0.3)" transform="rotate(20 80 95)"/>
+    <circle cx="130" cy="40" r="18" stroke="#8ab5c9" stroke-width="1.5" fill="none"/>
+    <circle cx="130" cy="40" r="6" fill="#8ab5c9" opacity="0.4"/>
+    <path d="M130 22 Q145 15 148 30 Q151 45 137 48 Q123 51 118 38 Q113 25 130 22Z" stroke="#b5c9b7" stroke-width="1" fill="rgba(181,201,183,0.2)"/>
+  </svg>
+
+  <!-- Floral SVG bottom right -->
+  <svg class="floral-br" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="60" cy="60" r="30" stroke="#c9968a" stroke-width="1.5" fill="none"/>
+    <circle cx="60" cy="60" r="12" fill="#c9968a" opacity="0.3"/>
+    <path d="M60 30 Q80 20 90 40 Q100 60 80 70 Q60 80 50 60 Q40 40 60 30Z" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.15)"/>
+    <path d="M20 80 Q10 60 30 50 Q50 40 55 60 Q60 80 40 85 Q20 90 20 80Z" stroke="#c9968a" stroke-width="1" fill="rgba(201,150,138,0.15)"/>
+    <line x1="60" y1="90" x2="60" y2="140" stroke="#8a9e8c" stroke-width="1.5"/>
+    <path d="M60 110 Q45 100 40 85" stroke="#8a9e8c" stroke-width="1" fill="none"/>
+    <path d="M60 120 Q75 110 80 95" stroke="#8a9e8c" stroke-width="1" fill="none"/>
+    <ellipse cx="40" cy="85" rx="12" ry="7" fill="rgba(138,158,140,0.3)" transform="rotate(-30 40 85)"/>
+    <ellipse cx="80" cy="95" rx="12" ry="7" fill="rgba(138,158,140,0.3)" transform="rotate(20 80 95)"/>
+    <circle cx="130" cy="40" r="18" stroke="#8ab5c9" stroke-width="1.5" fill="none"/>
+    <circle cx="130" cy="40" r="6" fill="#8ab5c9" opacity="0.4"/>
+  </svg>
+
+  <div class="gate-card">
+    <p class="gate-brand">Letters to My Girls</p>
+    <h1 class="gate-title"><em>Every Stage</em><br>of You</h1>
+    <p class="gate-sub">— De'Audra Crawford —</p>
+    <div class="gold-line"></div>
+    <p class="gate-desc">Welcome to your interactive journal experience. Your progress saves to the cloud — access your journal from any device, anytime, forever.</p>
+    <div class="gate-input-wrap">
+      <input type="email" class="gate-input" id="access-email" placeholder="Your email address" autocomplete="email" style="margin-bottom:0.75rem;"/>
+    </div>
+    <div class="gate-input-wrap">
+      <input type="text" class="gate-input" id="access-input" placeholder="Access code (from your order email)" autocomplete="off"/>
+      <p style="font-size:11px; color:var(--muted); margin-top:0.4rem; text-align:center;">Returning? Just enter your email — no code needed.</p>
+    </div>
+    <button class="gate-btn" id="gate-btn" onclick="checkAccess()">Enter My Journal</button>
+    <p class="gate-error" id="gate-error"></p>
+    <p class="gate-note">Don't have a code? <a href="https://www.urherllc.com/products/letters-to-my-girls-digital-download" target="_blank">Get the interactive journal →</a></p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div id="app">
+
+<!-- SAVE INDICATOR -->
+<div class="save-indicator" id="save-indicator">✓ Saved</div>
+
+<!-- WELCOME POPUP -->
+<div class="popup-overlay" id="welcome-popup" style="display:none;">
+  <div class="popup-card">
+    <button class="popup-close" onclick="closeWelcomePopup()">✕</button>
+    <p class="popup-subtitle">Letters to My Girls</p>
+    <h2 class="popup-title">Welcome to Your Journal 🌸</h2>
+    <div class="gold-line" style="margin:1rem auto;"></div>
+    <div style="margin:1.5rem 0;">
+      <div class="popup-feature">
+        <span class="popup-icon">📖</span>
+        <div class="popup-feature-text">
+          <strong>10 Girl Chapters</strong>
+          Each chapter has 8 sections — devotion, reflections, playlist, affirmations and more. Explore at your own pace.
+        </div>
+      </div>
+      <div class="popup-feature">
+        <span class="popup-icon">💾</span>
+        <div class="popup-feature-text">
+          <strong>Your Progress Auto-Saves</strong>
+          Everything you write saves automatically to this device. Come back anytime and your words will be here waiting.
+        </div>
+      </div>
+      <div class="popup-feature">
+        <span class="popup-icon">📥</span>
+        <div class="popup-feature-text">
+          <strong>Download Your Reflections</strong>
+          Use the Download button inside each chapter to save your responses as a PDF to keep forever.
+        </div>
+      </div>
+      <div class="popup-feature">
+        <span class="popup-icon">📱</span>
+        <div class="popup-feature-text">
+          <strong>Device Note</strong>
+          Your journal saves to this specific device and browser. Phone and laptop save separately.
+        </div>
+      </div>
+      <div class="popup-feature">
+        <span class="popup-icon">❓</span>
+        <div class="popup-feature-text">
+          <strong>Need Help?</strong>
+          Check the FAQ section in the sidebar anytime for answers to common questions.
+        </div>
+      </div>
+    </div>
+    <button class="popup-btn" onclick="closeWelcomePopup()">Got it — Let's Begin! 💕</button>
+  </div>
+</div>
+
+<!-- CHAPTER COMPLETE POPUP -->
+<div class="popup-overlay" id="chapter-complete-popup" style="display:none;">
+  <div class="popup-card" style="max-width:380px;">
+    <button class="popup-close" onclick="document.getElementById('chapter-complete-popup').style.display='none'">✕</button>
+    <div style="font-size:48px; margin-bottom:1rem;">🌸</div>
+    <h2 class="popup-title">Beautiful Work!</h2>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:var(--mauve); margin:1rem 0; line-height:1.7;">You just completed a chapter. Would you like to download your reflections before moving on?</p>
+    <button class="popup-btn" id="chapter-download-btn" onclick="downloadChapterFromPopup()" style="margin-bottom:0.8rem;">📥 Download My Reflections</button>
+    <button onclick="document.getElementById('chapter-complete-popup').style.display='none'" style="background:none; border:none; font-size:12px; color:var(--muted); cursor:pointer; letter-spacing:1px; font-family:'Jost',sans-serif;">No thanks, keep going →</button>
+  </div>
+</div>
+
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">Letters to My <span>Girls</span></div>
+    <div class="topbar-nav">
+      <button class="menu-btn" onclick="toggleSidebar()">☰ Chapters</button>
+    </div>
+  </div>
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Front Matter</div>
+      <div class="sidebar-item" onclick="showHome()">
+        <span class="girl-dot" style="background:var(--gold)"></span>
+        <span class="sidebar-item-text">Welcome Home</span>
+      </div>
+      <div class="sidebar-item" onclick="showSection('quiz-section')">
+        <span class="girl-dot" style="background:var(--lavender)"></span>
+        <span class="sidebar-item-text">Find Your Girl — Quiz</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">The Girls</div>
+      <div class="sidebar-item" onclick="showChapter('tired')">
+        <span class="girl-dot" style="background:var(--tired)"></span>
+        <span class="sidebar-item-text">The Tired Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('healing')">
+        <span class="girl-dot" style="background:var(--healing)"></span>
+        <span class="sidebar-item-text">The Healing Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('broke')">
+        <span class="girl-dot" style="background:var(--broke)"></span>
+        <span class="sidebar-item-text">The Broke But Believing Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('returning')">
+        <span class="girl-dot" style="background:var(--returning)"></span>
+        <span class="sidebar-item-text">The Returning Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('caregiving')">
+        <span class="girl-dot" style="background:var(--caregiving)"></span>
+        <span class="sidebar-item-text">The Caregiving Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('quiet')">
+        <span class="girl-dot" style="background:var(--quiet)"></span>
+        <span class="sidebar-item-text">The Quiet But Strong Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('boundary')">
+        <span class="girl-dot" style="background:var(--boundary)"></span>
+        <span class="sidebar-item-text">The Boundary Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('leveling')">
+        <span class="girl-dot" style="background:var(--leveling)"></span>
+        <span class="sidebar-item-text">The Leveling Up Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('vision')">
+        <span class="girl-dot" style="background:var(--vision)"></span>
+        <span class="sidebar-item-text">The Vision Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showChapter('soft')">
+        <span class="girl-dot" style="background:var(--soft)"></span>
+        <span class="sidebar-item-text">The Soft Life Girl</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Closing</div>
+      <div class="sidebar-item" onclick="showSection('becoming-section')">
+        <span class="girl-dot" style="background:var(--dusty-rose)"></span>
+        <span class="sidebar-item-text">The Becoming Girl</span>
+      </div>
+      <div class="sidebar-item" onclick="showSection('tracker-section')">
+        <span class="girl-dot" style="background:var(--sage)"></span>
+        <span class="sidebar-item-text">Chapter Tracker</span>
+      </div>
+            <div class="sidebar-item" onclick="showSection('faq-section')">
+        <span class="girl-dot" style="background:var(--teal)"></span>
+        <span class="sidebar-item-text">FAQ & Help</span>
+      </div>
+      <div class="sidebar-item" onclick="showSection('author-section')">
+        <span class="girl-dot" style="background:var(--gold)"></span>
+        <span class="sidebar-item-text">About De'Audra</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content area -->
+  <div class="main-content" id="main-content">
+
+    <!-- HOME -->
+    <div id="home-section">
+      <div class="home-hero">
+        <p class="home-eyebrow">An Interactive Journal Experience</p>
+        <h1 class="home-title">Letters to My <em>Girls</em></h1>
+        <p class="home-script">Every Stage of You</p>
+        <div class="dedication">
+          For every girl who was never chosen, who fought for everything, who stood firm when standing was the hardest thing, who never let the world's silence become her own. This is for you. You were always worth writing about.
+        </div>
+      </div>
+
+      <!-- Welcome -->
+      <div style="background:var(--warm-white); border-radius:20px; padding:2rem; margin-bottom:2rem;">
+        <h2 class="section-title">Welcome</h2>
+        <div class="prose">
+          <p>Inside these pages you'll meet the Tired Girl, the Soft Life Girl, the Leveling-Up Girl, the Healing Girl, the Broke-But-Believing Girl, the Quiet Strong Girl, the Vision Girl, the Returning Girl, the Boundary Girl, and the Caregiver Girl. They might sound like different people, but really, they're just different versions of you at different points in your life.</p>
+          <p>Some days you're the one holding it together for everybody. Other days you're the one who needs a break, a nap, and a good cry. Some seasons you're full of ideas and momentum, other seasons you're just trying to make it from one week to the next. All of that is real. All of that is valid. All of that is you.</p>
+          <p>In each chapter, we'll sit with one "girl" at a time. You'll get space to reflect on where you are, answer a few honest questions, and then read a letter written straight to that version of you. One letter will speak to you from a faith lens, and one will speak to you from a real-life, everyday lens — because God sees you, and life is happening, all at the same time.</p>
+          <p>Take your time with this. Flip to the girl that feels like you today, or walk through it chapter by chapter like a journey. However you use it, let these words remind you: you are still becoming, and every version of you deserves love.</p>
+        </div>
+
+        <!-- Prayer -->
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:0.5px solid rgba(201,169,110,0.2);">
+          <h3 style="font-family:'Dancing Script',cursive; font-size:26px; color:var(--dusty-rose); margin-bottom:1rem;">A Little Guidance</h3>
+          <div class="prose" style="font-style:italic; color:var(--mauve);">
+            <p>Lord, we come with honest hearts — tired, hopeful, broken, dreaming, and everything between. Meet each reader in the exact place that she is. Give her what she needs on these pages: rest where there is weariness, courage where there is fear, clarity where there is confusion, and true comfort where there is pain. Let these letters be lamps for her path and a mirror for her soul. Restore what has been lost, steady what is shaking, and help her remember she is seen, known, and loved. In Jesus' name, Amen.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Girl Cards -->
+      <h2 style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--dark); margin-bottom:1rem; text-align:center;">Meet the Girls</h2>
+      <p style="text-align:center; color:var(--muted); font-size:13px; margin-bottom:1.5rem; font-style:italic;">Every girl in this book is a version of you. Find the one who speaks to where you are today.</p>
+
+      <div class="girls-grid">
+        <div class="girl-card" style="background:rgba(201,150,138,0.12); border-color:rgba(201,150,138,0.3);" onclick="showChapter('tired')">
+          <span class="girl-card-letter" style="color:var(--tired)">A</span>
+          <div class="girl-card-name">The Tired Girl</div>
+          <div class="girl-card-desc">She is still showing up even though she is running on empty.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(138,181,201,0.12); border-color:rgba(138,181,201,0.3);" onclick="showChapter('healing')">
+          <span class="girl-card-letter" style="color:var(--healing)">D</span>
+          <div class="girl-card-name">The Healing Girl</div>
+          <div class="girl-card-desc">She is doing the brave, quiet work of healing.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(201,176,138,0.12); border-color:rgba(201,176,138,0.3);" onclick="showChapter('broke')">
+          <span class="girl-card-letter" style="color:var(--broke)">E</span>
+          <div class="girl-card-name">The Broke But Believing Girl</div>
+          <div class="girl-card-desc">She is trusting God when the numbers don't add up.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(168,201,138,0.12); border-color:rgba(168,201,138,0.3);" onclick="showChapter('returning')">
+          <span class="girl-card-letter" style="color:var(--returning)">F</span>
+          <div class="girl-card-name">The Returning Girl</div>
+          <div class="girl-card-desc">She lost herself somewhere along the way — and she is finding her way back.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(201,138,181,0.12); border-color:rgba(201,138,181,0.3);" onclick="showChapter('caregiving')">
+          <span class="girl-card-letter" style="color:var(--caregiving)">G</span>
+          <div class="girl-card-name">The Caregiving Girl</div>
+          <div class="girl-card-desc">She pours everything into everyone else.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(138,138,201,0.12); border-color:rgba(138,138,201,0.3);" onclick="showChapter('quiet')">
+          <span class="girl-card-letter" style="color:var(--quiet)">J</span>
+          <div class="girl-card-name">The Quiet But Strong Girl</div>
+          <div class="girl-card-desc">She carries more than anyone knows.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(201,169,138,0.12); border-color:rgba(201,169,138,0.3);" onclick="showChapter('boundary')">
+          <span class="girl-card-letter" style="color:var(--boundary)">I</span>
+          <div class="girl-card-name">The Boundary Girl</div>
+          <div class="girl-card-desc">She is learning that saying no is not selfish — it is sacred.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(138,201,169,0.12); border-color:rgba(138,201,169,0.3);" onclick="showChapter('leveling')">
+          <span class="girl-card-letter" style="color:var(--leveling)">C</span>
+          <div class="girl-card-name">The Leveling Up Girl</div>
+          <div class="girl-card-desc">She is in full building mode — growing, stretching, becoming.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(201,192,138,0.12); border-color:rgba(201,192,138,0.3);" onclick="showChapter('vision')">
+          <span class="girl-card-letter" style="color:var(--vision)">H</span>
+          <div class="girl-card-name">The Vision Girl</div>
+          <div class="girl-card-desc">She can see it clearly even when no one else can.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+        <div class="girl-card" style="background:rgba(201,138,138,0.12); border-color:rgba(201,138,138,0.3);" onclick="showChapter('soft')">
+          <span class="girl-card-letter" style="color:var(--soft)">B</span>
+          <div class="girl-card-name">The Soft Life Girl</div>
+          <div class="girl-card-desc">She is choosing peace, comfort, and joy on purpose.</div>
+          <span class="girl-card-arrow">Enter her chapter →</span>
+        </div>
+      </div>
+
+      <div class="app-footer">
+        &copy; De'Audra Crawford &nbsp;|&nbsp; <a href="https://urherllc.com" target="_blank">urherllc.com</a> &nbsp;|&nbsp; @urherllc
+      </div>
+    </div>
+
+    <!-- QUIZ SECTION -->
+    <div id="quiz-section" style="display:none;">
+      <div class="quiz-launch">
+        <h2 class="quiz-launch-title">Which Girl Are You Today?</h2>
+        <p class="quiz-launch-sub">A Quiz to Find Your Chapter</p>
+        <p class="quiz-launch-body">Take our free interactive quiz to discover which girl speaks to your season right now. No right or wrong answers — only honest ones. When you finish, your results will appear automatically.</p>
+        <a href="https://www.urherllc.com/pages/which-girl-are-you" target="_blank" class="quiz-launch-btn">Take the Quiz →</a>
+        <p class="quiz-note">When you finish, come back here and find your girl below to go to your chapter.</p>
+      </div>
+
+      <div class="results-nav">
+        <h3 class="results-nav-title">Find Your Girl — Go to Your Chapter</h3>
+        <div id="results-list"></div>
+      </div>
+    </div>
+
+    <!-- CHAPTER VIEWS (generated by JS) -->
+    <div id="chapter-container"></div>
+
+    <!-- BECOMING SECTION -->
+    <div id="becoming-section" style="display:none;">
+      <div class="becoming-section">
+        <h2 class="becoming-title">The Becoming Girl</h2>
+        <div class="gold-line" style="margin:1rem auto;"></div>
+        <div class="becoming-body">
+          <p>You are not a finished product. You are not broken beyond repair. You are not too far gone, too late, too tired, too much, or not enough. You are becoming. Every version of you. All at once. Still becoming.</p>
+        </div>
+        <div style="background:var(--warm-white); border-radius:20px; padding:2rem; text-align:left; max-width:600px; margin:0 auto 2rem;">
+          <div class="prose">
+            <p>You made it through every chapter. Or maybe you skipped around. Maybe you sat in one chapter for a long time before you could move to the next. That's okay. That's actually the point. Because here is what De'Audra wants you to know, from one girl to another:</p>
+            <p>Every girl in these pages — the Tired one, the Healing one, the Boundary-Setting one, the Dreaming one — they are all you. They always were. And not one version of you was less worthy of grace than the next.</p>
+            <p>The Becoming Girl does not have it all figured out. She is simply committed to continuing. She shows up for herself even when it is inconvenient. She extends herself grace with the same generosity she gives to others. She trusts the process even when she cannot see the progress. That girl? She is you. Right now. Today.</p>
+          </div>
+        </div>
+
+        <!-- Becoming affirmations -->
+        <div style="max-width:600px; margin:0 auto; text-align:left;">
+          <h3 class="section-title">The Becoming Girl's Affirmations</h3>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; color:var(--mauve); margin-bottom:1.5rem;">For the girl who has been every girl in this book — and is still going.</p>
+          <div id="becoming-affirmations"></div>
+        </div>
+
+        <!-- Final letter -->
+        <div style="max-width:600px; margin:2rem auto 0; text-align:left; background:var(--warm-white); border-radius:20px; padding:2rem;">
+          <h3 style="font-family:'Dancing Script',cursive; font-size:28px; color:var(--dusty-rose); margin-bottom:1rem;">A Final Letter From Me</h3>
+          <div class="dear-letter">
+            <p>When I started writing these letters, I was sitting in one of them myself. I was tired, healing, and still trying to believe. I was the girl who kept going even when everything in me was begging to stop. I didn't write these words because I had all the answers. I wrote them because I needed them. And if I needed them, I knew you might too.</p>
+            <p style="margin-top:1rem;">I prayed over every page, every girl, every question. I asked God to meet you exactly where you are — not where you think you should be, not where you used to be, but right here, right now, in this season.</p>
+            <p style="margin-top:1rem;">My prayer for you is that you close this journal feeling more seen, more known, and more loved than when you opened it. Not by me — but by the God who wrote your story before you were ever born, and who is still writing it with purpose.</p>
+            <p style="margin-top:1rem;">You are still becoming. And that is the most beautiful thing about you.</p>
+            <span class="letter-closing">With every piece of love I have,</span>
+            <span class="letter-signature">De'Audra</span>
+          </div>
+        </div>
+
+        <!-- Closing Prayer -->
+        <div style="max-width:600px; margin:2rem auto 0; text-align:left; background:var(--parchment); border-radius:20px; padding:2rem; border:1px solid rgba(201,169,110,0.2);">
+          <h3 style="font-family:'Dancing Script',cursive; font-size:28px; color:var(--dusty-rose); margin-bottom:1rem;">A Closing Prayer</h3>
+          <div class="closing-prayer">
+            <p>Lord, Thank You for every girl who found her way to these pages. She didn't get here by accident — You led her here because You knew exactly what she needed to hear.</p>
+            <p style="margin-top:1rem;">Meet her in the chapter she is living. Be the rest she craves, the healing she is reaching for, the courage she is building. Let every word she read land as truth in her bones, not just information in her mind.</p>
+            <p style="margin-top:1rem;">Guard her heart as she does this brave work of becoming. Remind her, on the hard days, that You are not finished with her. Remind her that tired does not mean failed. That healing does not mean broken forever. That becoming does not mean she is not already enough.</p>
+            <p style="margin-top:1rem;">And Lord, for the girl who closes this journal still unsure — hold her especially. Let her feel Your presence in the questions, not just the answers.</p>
+            <p style="margin-top:1rem; font-style:italic; color:var(--mauve);">She is seen. She is known. She is loved.</p>
+            <p style="margin-top:0.5rem;">In Jesus' name, Amen.</p>
+            <span class="letter-signature" style="margin-top:1rem;">De'Audra</span>
+          </div>
+        </div>
+
+        <!-- Closing quote -->
+        <div style="margin-top:2rem; padding:2rem;">
+          <p style="font-family:'Cormorant Garamond',serif; font-size:26px; font-style:italic; color:var(--dark); line-height:1.5;">You are still becoming.<br>And every version of you deserves love.</p>
+          <p style="font-family:'Dancing Script',cursive; font-size:22px; color:var(--dusty-rose); margin-top:0.5rem;">— De'Audra</p>
+        </div>
+
+        <!-- Journal Reflection -->
+        <div style="max-width:600px; margin:0 auto; text-align:left;">
+          <h3 class="section-title">Journal Reflection</h3>
+          <div class="reflection-question">
+            <div class="rq-text">Which girl showed up most for you in this season?</div>
+            <textarea class="rq-textarea" placeholder="Write your reflection here..."></textarea>
+          </div>
+          <div class="reflection-question">
+            <div class="rq-text">What did this journal teach you about yourself?</div>
+            <textarea class="rq-textarea" placeholder="Write your reflection here..."></textarea>
+          </div>
+          <div class="reflection-question">
+            <div class="rq-text">What version of you do you want to grow into next?</div>
+            <textarea class="rq-textarea" placeholder="Write your reflection here..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAPTER TRACKER -->
+    <div id="tracker-section" style="display:none;">
+      <h2 class="section-title">Chapter Tracker</h2>
+      <p style="color:var(--muted); font-size:13px; margin-bottom:1.5rem;">Use this page to track your journey through Letters to My Girls. Check off the chapters you've visited, mark if you've revisited, and note the date. Come back as many times as you need to.</p>
+      <div class="tracker-grid" id="tracker-grid"></div>
+    </div>
+
+    <!-- FAQ SECTION -->
+    <div id="faq-section" style="display:none;">
+      <h2 class="section-title">FAQ & Help</h2>
+      <p style="color:var(--muted); font-size:13px; margin-bottom:1.5rem;">Everything you need to know about your interactive journal experience.</p>
+      <div id="faq-list">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- ABOUT AUTHOR -->
+    <div id="author-section" style="display:none;">
+      <div class="author-card">
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+          <div class="author-initial">D</div>
+          <div>
+            <h2 style="font-family:'Cormorant Garamond',serif; font-size:28px; color:var(--dark);">De'Audra Crawford</h2>
+            <p style="font-size:12px; letter-spacing:2px; color:var(--gold); text-transform:uppercase;">Author & Founder, URHER LLC</p>
+          </div>
+        </div>
+        <div class="author-bio">
+          <p>De'Audra Crawford is a faith-driven entrepreneur, brand builder, and the founder of URHER LLC — a women's fashion and lifestyle brand rooted in empowerment, built on the belief that every woman already is who she is trying to become.</p>
+          <p style="margin-top:1rem;">Born and raised in Douglasville, Georgia, De'Audra is a small-town girl who carries big-city ambition without ever losing her roots. She holds an MBA in Business Administration and earned her undergraduate degree from Benedict College.</p>
+          <p style="margin-top:1rem;">She has navigated seasons that would have caused many women to fold — seasons of fighting to be seen, fighting to be chosen, fighting for every single thing she has ever laid her hands on. And through all of it, she never wavered. Not on her worth. Not on her faith. Not on her belief that what God placed inside her was real and worth the fight.</p>
+          <p style="margin-top:1rem;">After more than two decades away, De'Audra returned home to Douglasville — not as the woman who left, but as the woman she became while she was gone. The journey back taught her what the Returning Girl chapter of this book already knows: you don't come back the same. You come back whole.</p>
+          <p style="margin-top:1rem; font-style:italic; color:var(--mauve);">Letters to My Girls is her second Journal. It was not written from a place of having it all figured out. It was written from a place of having been every girl in these pages — and choosing, every single time, to get back up.</p>
+        </div>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="https://urherllc.com" target="_blank" style="font-size:12px; letter-spacing:2px; color:var(--gold); text-decoration:none; border:1px solid rgba(201,169,110,0.3); padding:8px 16px; border-radius:20px;">urherllc.com</a>
+          <a href="https://instagram.com/urherllc" target="_blank" style="font-size:12px; letter-spacing:2px; color:var(--gold); text-decoration:none; border:1px solid rgba(201,169,110,0.3); padding:8px 16px; border-radius:20px;">@urherllc</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+</div><!-- end app -->
+
+
+<script>
+// ── Access gate handled by cloud system below ────────────────────────────────
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+let currentSection = 'home';
+
+function hideAll() {
+  document.getElementById('home-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'none';
+  document.getElementById('chapter-container').style.display = 'none';
+  document.getElementById('becoming-section').style.display = 'none';
+  document.getElementById('tracker-section').style.display = 'none';
+  document.getElementById('author-section').style.display = 'none';
+  document.getElementById('faq-section').style.display = 'none';
+  closeSidebar();
+  window.scrollTo(0,0);
+}
+
+function showHome() {
+  hideAll();
+  document.getElementById('home-section').style.display = 'block';
+  currentSection = 'home';
+}
+
+function showSection(id) {
+  hideAll();
+  document.getElementById(id).style.display = 'block';
+  currentSection = id;
+}
+
+function showChapter(key) {
+  hideAll();
+  document.getElementById('chapter-container').style.display = 'block';
+  renderChapter(key);
+  currentSection = key;
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sb.classList.toggle('open');
+  overlay.classList.toggle('show');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ── Results list ──────────────────────────────────────────────────────────────
+const girlsData = [
+  { letter:'A', key:'tired', name:'The Tired Girl', desc:'She is still showing up even though she is running on empty — and it is time to rest.', color:'var(--tired)' },
+  { letter:'B', key:'soft', name:'The Soft Life Girl', desc:'She is choosing peace, comfort, and joy on purpose — and she has earned every bit of it.', color:'var(--soft)' },
+  { letter:'C', key:'leveling', name:'The Leveling Up Girl', desc:'She is in full building mode — growing, stretching, and becoming everything she was made to be.', color:'var(--leveling)' },
+  { letter:'D', key:'healing', name:'The Healing Girl', desc:'She is doing the brave, quiet work of healing — and God is in it with her every step.', color:'var(--healing)' },
+  { letter:'E', key:'broke', name:'The Broke But Believing Girl', desc:'She is trusting God when the numbers don\'t add up — and her faith is bigger than her circumstances.', color:'var(--broke)' },
+  { letter:'F', key:'returning', name:'The Returning Girl', desc:'She lost herself somewhere along the way — and she is finally finding her way back home.', color:'var(--returning)' },
+  { letter:'G', key:'caregiving', name:'The Caregiving Girl', desc:'She pours everything into everyone else — and it is time someone poured back into her.', color:'var(--caregiving)' },
+  { letter:'H', key:'vision', name:'The Vision Girl', desc:'She can see it clearly even when no one else can — and she is building the bridge to get there.', color:'var(--vision)' },
+  { letter:'I', key:'boundary', name:'The Boundary Girl', desc:'She is learning that saying no is not selfish — it is the bravest thing she has ever done.', color:'var(--boundary)' },
+  { letter:'J', key:'quiet', name:'The Quiet But Strong Girl', desc:'She carries more than anyone knows — and this chapter finally sees her.', color:'var(--quiet)' },
+];
+
+function buildResultsList() {
+  const list = document.getElementById('results-list');
+  list.innerHTML = girlsData.map(g => `
+    <div class="result-card-nav" onclick="showChapter('${g.key}')">
+      <div class="result-letter" style="color:${g.color}">${g.letter}</div>
+      <div class="result-girl-info">
+        <div class="result-girl-name">${g.name}</div>
+        <div class="result-girl-desc">${g.desc}</div>
+      </div>
+      <div class="result-go">Go to chapter →</div>
+    </div>
+  `).join('');
+}
+
+// ── Tracker ───────────────────────────────────────────────────────────────────
+function buildTracker() {
+  const grid = document.getElementById('tracker-grid');
+  grid.innerHTML = girlsData.map((g, idx) => `
+    <div class="tracker-item">
+      <div class="tracker-dot" style="background:${g.color}"></div>
+      <div class="tracker-info">
+        <div class="tracker-name">${g.name}</div>
+        <div class="tracker-visited">
+          <div class="tracker-check" onclick="this.classList.toggle('done'); this.textContent=this.classList.contains('done')?'✓':'';">
+          </div>
+          <span>Visited</span>
+        </div>
+        <div class="tracker-date" style="margin-top:4px;">
+          <span>Date:</span>
+          <input type="text" class="tracker-date-input" data-tracker-date-id="tracker_${g.key}" placeholder="mm/dd/yy" onchange="saveTrackerState()">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Becoming affirmations ─────────────────────────────────────────────────────
+function buildBecomingAffirmations() {
+  const affs = [
+    'I am allowed to be in process and still be at peace.',
+    'I do not have to have it all together to be worthy of a full life.',
+    'Every season I have survived has been preparing me for the next.',
+    'I extend to myself the grace I so freely give to others.',
+    'I am not behind. I am exactly where I am supposed to be.',
+    'Becoming is not a destination — it is a daily act of courage.',
+    'I trust God with every version of me — the messy, the healing, the growing.',
+    'I am still here. That alone is a testimony.',
+  ];
+  const container = document.getElementById('becoming-affirmations');
+  container.innerHTML = affs.map(a => `
+    <div class="affirmation-item" data-check-key="aff_0" onclick="toggleAff(this, 'aff_0'); this.querySelector('.aff-check').textContent=this.classList.contains('checked')?'✓':'';">
+      <div class="aff-check"></div>
+      <div class="aff-text">${a}</div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+<script>
+// ══════════════════════════════════════════
+// LETTERS TO MY GIRLS — CHAPTERS DATA
+// ══════════════════════════════════════════
+
+const chapters = {
+
+  tired: {
+    key: 'tired',
+    letter: 'A',
+    name: 'The Tired Girl',
+    tagline: 'She is still showing up even though she is running on empty.',
+    color: '#c9968a',
+    bgGradient: 'linear-gradient(135deg, rgba(201,150,138,0.2), rgba(201,169,110,0.1))',
+    scripture: '"Come unto me, all ye that labour and are heavy laden, and I will give you rest." — Matthew 11:28',
+    prev: null,
+    next: 'healing',
+
+    youAreNotAlone: [
+      '"I was so good at being strong that nobody knew I was drowning. I didn\'t even know. I thought the water was just where I lived."',
+      '"The first time I told someone I wasn\'t okay, I cried for an hour. Not because it was sad — because it was such a relief to finally stop pretending."',
+      '"Tired doesn\'t always look like bags under your eyes. Sometimes it looks like being the life of the party while dying a little inside."',
+    ],
+
+    permissionItems: [
+      'Rest without guilt.',
+      'Say no without explanation.',
+      'Be tired out loud.',
+    ],
+
+    noteFromMe: `I wrote this chapter because I lived it. There was a season — and some of you know exactly which one I am talking about — where tired did not even begin to cover it. I was showing up to everything and showing up for everyone, and somewhere in the middle of all that showing up, I completely forgot to show up for myself.\n\nI kept thinking if I just pushed a little harder, rested a little later, held on a little longer, I would eventually feel okay. But the truth is I was not okay. I was exhausted in a way that sleep could not fix, because it was not just my body that was tired. My soul was tired.\n\nIf you landed on this chapter, I want you to know something before you read another word: I see you. God sees you. And neither of us is disappointed in you for being tired. Being tired is not a character flaw. It is not a faith problem. It is not proof that you are weak or that you are doing life wrong. It is what happens when a woman who loves deeply, gives generously, and holds everything together finally reaches her limit — and that limit is human. It is holy, even. Because even Jesus withdrew. Even he rested. Even he said, come to me, all of you who are weary.\n\nThis chapter is not going to tell you to try harder or do better. It is going to tell you to lay it down. Read slowly. Take your time. And if something on these pages makes you cry — let it. Sometimes the most healing thing we can do is finally stop performing okay and just feel it.\n\nWith love and zero judgment,`,
+
+    devotionScripture: '"Come to me, all who are weary and burdened, and I will give you rest." — Matthew 11:28',
+    devotionBody: `Jesus does not say come to me when you have it together. He does not say come when you have rested enough, prayed enough, or figured out how to stop being tired. He says come as you are — weary, burdened, dragging the weight of everything you have been carrying.\n\nYou have been in keep going mode so long that exhaustion feels like your natural state. But your body knows the difference between living and surviving — and right now it is begging you to listen. The tightness in your shoulders. The heaviness behind your eyes. The way you wake up already tired before the day begins. That is not weakness. That is your body telling the truth your mouth has been too busy to say.\n\nRest is not a reward for finishing. Jesus is not asking you to earn it. He is literally extending an invitation — come. Sit. Let me hold what you cannot. This is not laziness. This is not giving up. This is the holy act of trusting that God can hold what you lay down.\n\nThere will be a day when this season is a testimony. When you look back and see exactly how He carried you through what you swore would break you. Until then, it is okay to be the girl who needs a nap, a cry, and a Savior at the same time.`,
+    devotionReflection: 'Jesus is not disappointed in your tiredness. He is inviting you into rest. Will you let yourself accept the invitation?',
+
+    shortStory: {
+      title: 'The Morning She Stopped',
+      body: `She woke up that Tuesday like she woke up every Tuesday — already behind.\n\nThe alarm had gone off twice. She had silenced both of them with the practiced efficiency of someone who had done it a thousand times. Her body was still in the bed but her mind was already making the list: lunches to pack, emails to answer, a meeting she was not prepared for, a phone call she had been putting off for two weeks, a bill that was due yesterday.\n\nShe sat up slowly. The room was quiet. Everyone else was still asleep.\n\nAnd something happened that had not happened in a very long time. She did not move.\n\nNot because she had time. She absolutely did not have time. But because for one small, terrifying, sacred moment — she could not. Her body simply would not cooperate with the schedule her life demanded. Her legs did not swing off the edge of the mattress. Her hands did not reach for the phone. She just sat there in the gray morning light, and for the first time in longer than she could remember, she let herself feel it. The weight of it.\n\nAll of it. Every early morning and late night. Every "YES" she said when every part of her screamed "NO." Every time she had said "I'm fine" when she was the opposite of fine. Every meal she had eaten standing up. Every shower she had rushed through. Every prayer she had started and fallen asleep in the middle of.\n\nShe felt it all. And she did not try to push it back down.\n\nShe just sat there. In the quiet. In the mess of it.\n\nAnd somehow — in that one unremarkable Tuesday morning moment — something cracked open. Not in a breaking way. In the way that light gets in.\n\nShe did not know it then. But that was the morning she started choosing herself.`,
+      moral: 'Maybe this morning is this morning. Maybe this page is your quiet. Maybe it starts right here.',
+    },
+
+    reflectionQuestions: [
+      'What is the one thing you are most tired of right now — that you have never said out loud to anyone?',
+      'When did tired start to feel normal to you? Can you remember a time when you weren\'t carrying this much?',
+      'What would you do differently this week if you actually gave yourself permission to rest — without guilt, without explanation, without earning it first?',
+      'Who in your life benefits most from you staying exhausted? And what would it cost them if you chose yourself?',
+      'If God sat across from you right now and asked you, "What do you need, daughter?" — what would your honest answer be?',
+      'What is one small act of rest or care you can give yourself TODAY — not next week, not when things slow down, but today?',
+    ],
+    gentleWord: {
+      body: 'If any of these questions brought up something painful — something you have been pushing down for a long time — that is not a bad sign. That is the beginning of something healing. You do not have to have it figured out. You do not have to feel better by the end of this page. You just have to be honest. And you just were. That took courage. More than you know.',
+      closing: 'Rest is not the reward for finishing. Rest is the grace you receive right now.',
+    },
+
+    playlist: [
+      { title: '"Rest"', artist: 'Maverick City Music' },
+      { title: '"Even If"', artist: 'MercyMe' },
+      { title: '"I Need You"', artist: 'Tasha Cobbs Leonard' },
+      { title: '"Come As You Are"', artist: 'Crowder' },
+      { title: '"Nobody"', artist: 'Casting Crowns ft. Matthew West' },
+    ],
+
+    affirmations: [
+      'I am allowed to rest. Rest is not laziness — it is wisdom.',
+      'My worth is not measured by my productivity.',
+      'I release what is too heavy for me to carry alone.',
+      'I choose peace over performance today.',
+      'God is not disappointed in my tiredness — He is inviting me to lay it down.',
+      'I am strong enough to ask for help.',
+      'I deserve a life I do not have to constantly recover from.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Tired Girl,',
+      body: `You have been in survival mode so long that exhaustion feels normal, but normal does not mean healthy. You are not weak for reaching your limit; you are human, and your body has been whispering slow down while the world kept yelling do more. One day you are going to look back at this version of you and feel so much compassion, because you'll see how hard she fought with almost nothing left in the tank. Rest is not a reward; it is a requirement, and you are allowed to build a life that does not chew you up just because you are capable. You deserve a life where you are not always pushing through pain, but actually living in peace.\n\nYou have been carrying so much for so long that "I'm fine" has become your armor, but God sees right through it to the fatigue in your bones. He is not disappointed in you for being tired; he is inviting you to lay it all down at his feet and breathe again. You do not have to earn rest with productivity or perfection, because Jesus already did the work; now he calls you to come, sit, and let him hold what you cannot. There will be a day when this season is a testimony, when you will look back and see how he carried you through what you swore would break you. Until then, it is okay to be the girl who needs a nap, a cry, and a Savior at the same time.`,
+      closing: 'Love,',
+      signature: 'The You Who Finally Chose Rest',
+    },
+    letterBackPrompt: 'After you\'ve read your chapter, write your own words back to the Tired Girl. What would you say to her? What does she need to hear from you?',
+  },
+
+  healing: {
+    key: 'healing',
+    letter: 'D',
+    name: 'The Healing Girl',
+    tagline: 'She is doing the brave, quiet work of healing.',
+    color: '#8ab5c9',
+    bgGradient: 'linear-gradient(135deg, rgba(138,181,201,0.2), rgba(181,201,183,0.1))',
+    prev: 'tired',
+    next: 'broke',
+
+    youAreNotAlone: [
+      '"Healing is not a straight line. Some days I\'m fine and some days a song ruins me in a parking lot. Both of those are still healing."',
+      '"I stopped performing okay. That was the beginning of actually becoming okay."',
+      '"The hardest part of healing was forgiving myself for not healing faster."',
+    ],
+
+    permissionItems: [
+      'Take as long as healing actually takes.',
+      'Not explain your process to anyone.',
+      'Have bad days without calling it a setback.',
+    ],
+
+    noteFromMe: `Before anything else, I want to say something that I wish someone had said to me when I was in my healing season: You are not broken. You are healing. Those are not the same thing.\n\nBroken implies something is wrong with you. Healing means something happened to you — and your body, your heart, and your spirit are doing the profound, sacred work of becoming whole again. That is not weakness. That is one of the most courageous things a human being can do.\n\nHealing is not linear. It does not move in a straight line from pain to peace. It loops back. It shows up on days you thought you were past it. It has good weeks and hard Tuesdays and moments in the grocery store when a song comes on and you have to breathe through it in the cereal aisle.\n\nAll of that is still healing. All of it counts.\n\nThis chapter does not have a timeline. You can come back to it as many times as you need. Some pages will hit harder than others on different days — that is by design. Healing has layers, and you will find new ones each time you return.\n\nYou are safe here. Take your time.\n\nGently, with so much love,`,
+
+    devotionScripture: '"He heals the brokenhearted and binds up their wounds." — Psalm 147:3',
+    devotionBody: `He heals. Present tense, active voice. Not He healed — past tense, finished — but He heals. Ongoing. Current. Right now, in this season, in this body, in this heart that is still tender from what it has been through.\n\nHealing is not linear. You already know this. It has good weeks and hard Tuesdays. It loops back through things you thought you were over. It shows up uninvited in ordinary moments — a song, a smell, a phrase that someone says that should mean nothing but suddenly means everything. That is not a failure in your healing. That is how healing actually works.\n\nGod does not bind up wounds from a distance. The image here is intimate — close, careful, tender. The kind of care that requires presence. He is not watching your healing from afar. He is in it with you. Every step back. Every step forward. Every day you are not sure which direction you are moving.\n\nYou do not have to have this figured out. You do not have to be further along than you are. You just have to keep allowing Him access to the places that still hurt. That is the only requirement. Healing is His work. Showing up is yours.`,
+    devotionReflection: 'What wound are you still carrying that you have not fully allowed God — or safe people — access to? What would it take to let healing in a little deeper today?',
+
+    shortStory: {
+      title: 'The Day She Stopped Explaining',
+      body: `For a long time, she carried her healing like an apology.\n\nShe explained it to people. Justified it. Softened it so they would not be uncomfortable. She said things like "it was a long time ago" and "I'm mostly okay" and "I don't want to make it a whole thing" — even when it was, in fact, a whole thing.\n\nShe was healing from something real. Something that had taken pieces of her she was still looking for. But she had gotten so good at performing okay that sometimes she convinced even herself.\n\nUntil the day a friend asked how she was actually doing — and something in the word actually opened a door she had been keeping shut.\n\nShe did not perform okay. She just told the truth.\n\nShe said: I am healing and it is hard and I am not where I thought I would be by now and I am tired of pretending otherwise.\n\nThe friend did not flinch. She did not offer advice. She just said: I know. And I am glad you told me.\n\nOn the drive home, she cried the kind of cry that releases something old.\n\nShe realized she had been spending enormous energy protecting everyone else from her healing — when all she actually needed was one safe place to tell the truth.`,
+      moral: 'You do not have to earn the right to still be healing. What happened to you was real. Your process is real. And you are allowed to take as long as it takes.',
+    },
+
+    reflectionQuestions: [
+      'What are you healing from — even if you have never named it out loud before? Write it here. Give it words.',
+      'What does healing look like for you on a good day? What does it look like on a hard one?',
+      'What have you been telling yourself about how long your healing should take? Where did that timeline come from?',
+      'Is there something or someone you are still waiting for an apology from — that you may never get? What would it feel like to begin healing without it?',
+      'What part of yourself are you most afraid you lost — and do you believe it can come back?',
+      'What is one thing your healed self would want you to know right now, in this tender season?',
+    ],
+    gentleWord: {
+      body: 'Healing is not something you push through. It is something you move through — gently, patiently, with grace toward yourself at every step. You are not behind. You are becoming.',
+      closing: 'You are not who you were when this happened. You are who you are becoming because of what you survived.',
+    },
+
+    playlist: [
+      { title: '"Healer"', artist: 'Kari Jobe' },
+      { title: '"No Longer Slaves"', artist: 'Bethel Music' },
+      { title: '"Scars"', artist: 'I Am They' },
+      { title: '"Greater"', artist: 'MercyMe' },
+      { title: '"Put a Praise On It"', artist: 'Tasha Cobbs' },
+    ],
+
+    affirmations: [
+      'My healing is not linear, and that is okay.',
+      'I am allowed to grieve what hurt me and still move forward.',
+      'I do not have to perform wholeness I don\'t yet feel.',
+      'God is gentle with me in this season of mending.',
+      'My wounds do not define me — my willingness to heal does.',
+      'I release shame about how long this is taking.',
+      'I am becoming stronger in the broken places.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Healing Girl,',
+      body: `You have survived things that should have broken you, and yet here you are, still reaching for better. God has seen every tear, every memory that still stings, every moment you forced yourself to function when your heart was in pieces. He is not rushing your process; he is walking with you, gently touching places you are finally brave enough to bring into the light. One day, your story will be a lifeline to someone who thinks they will never feel whole again, and you will recognize the same God who held you is now holding them. You are not too damaged for restoration; you are exactly who grace is for.\n\nYou are doing one of the hardest things a person can do: choosing to face what hurt you instead of stuffing it forever. Healing is not a straight line; some days you feel brand new, other days it feels like you're right back where you started, but you are not. Every time you choose honesty over numbness, boundaries over people-pleasing, reflection over running, you move a little further from the version of you who thought pain was all there was. There will come a day when you remember what happened and it no longer owns you; it will just be a chapter, not your whole book. Until then, be as patient with yourself as you are with everyone you love.`,
+      closing: 'Love,',
+      signature: 'The You Who Found Wholeness',
+    },
+    letterBackPrompt: 'After you\'ve read your chapter, write your own words back to the Healing Girl. What would you say to her? What does she need to hear from you?',
+  },
+
+  broke: {
+    key: 'broke',
+    letter: 'E',
+    name: 'The Broke But Believing Girl',
+    tagline: 'She is trusting God when the numbers don\'t add up.',
+    color: '#c9b08a',
+    bgGradient: 'linear-gradient(135deg, rgba(201,176,138,0.2), rgba(201,169,110,0.1))',
+    prev: 'healing',
+    next: 'returning',
+
+    youAreNotAlone: [
+      '"I prayed over my bills more times than I can count. And every single time, somehow, it worked out. Not always the way I expected — but it worked out."',
+      '"I learned who God was in my broke season in a way I never could have learned when everything was fine."',
+      '"The shame of financial struggle almost silenced me. But my testimony of God\'s faithfulness in that season has helped more people than any season of abundance ever did."',
+    ],
+
+    permissionItems: [
+      'Release the shame of this season.',
+      'Trust God\'s timeline over your own.',
+      'Believe the breakthrough is already on its way.',
+    ],
+
+    noteFromMe: `I need you to know that I wrote this chapter with deep respect for where you are.\n\nBecause this season — the one where you are trusting God while staring at numbers that do not add up, praying over bills, and navigating the particular shame that our culture attaches to financial struggle — this season requires a level of faith that most people will never understand until they live it.\n\nWhat you are doing is not desperate. It is courageous.\n\nThere is a version of this chapter I could have written that is all about money tips and financial planning and how to get yourself out of this season. That is a good chapter — but it is not this one. This one is about what you do with your spirit while your circumstances have not caught up with your faith yet.\n\nBecause I know what it is like to believe God for something you cannot see. I know what it is like to keep showing up, keep giving, keep trusting, when the evidence says maybe you should stop. And I know what it is like to feel the shame of a season you did not choose while everyone around you seems to be flourishing.\n\nYou are not failing. You are in a gap that has a purpose. And your breakthrough is closer than it has ever been. Hold on. Keep believing. But also — let this chapter remind you that God sees you in the gap, not just on the other side of it.\n\nWith faith and full belief in what God is doing,`,
+
+    devotionScripture: '"My God shall supply all your needs according to His riches in glory by Christ Jesus." — Philippians 4:19',
+    devotionBody: `His riches. Not your income. Not your credit score. Not your current bank balance or the job you have or the opportunity that has not come through yet. His riches. Which means the supply is not limited by your situation — it is sourced from something your circumstances cannot touch.\n\nThis verse was written by a man who had experienced both abundance and need. Paul was not writing from comfort. He was writing from a place of proven faithfulness — of having watched God provide in ways that defied the numbers.\n\nThere is a particular kind of shame that this season carries. The world measures worth by financial stability, and when you are in the gap, that message gets loud. But God does not measure your value by your bank account. He sees your faithfulness in the gap. He sees every prayer over the bills. He sees every act of generosity you offered even when it cost you. None of it is invisible to Him.\n\nThe breakthrough is not just coming for you. It is coming through you. What you are learning in this season — about faith, about trust, about the difference between security and provision — will be the testimony that sets someone else free. Hold on. He has never run out.`,
+    devotionReflection: 'Where do you need to shift from trusting your circumstances to trusting His riches? What would your day look like if you believed the supply was already secured?',
+
+    shortStory: {
+      title: 'The Prayer Over the Pantry',
+      body: `She stood in the grocery store for eleven minutes in the pasta aisle.\n\nNot because she could not decide. But because she was doing math in her head — real math, the kind that has consequences — and the numbers were not working out the way she needed them to.\n\nShe put back the name-brand sauce. Got the store brand. Stood there a moment longer.\n\nThis was not where she thought she would be at this age. She had done everything she was supposed to do — worked hard, believed big, gave generously even when she did not have much to give. And yet here she was, calculating sauce.\n\nShe felt the familiar shame start to rise.\n\nAnd then she did something she had been doing more and more lately. She prayed. Right there in the pasta aisle, between the penne and the rigatoni. Not a fancy prayer. Just: God, I need you to show up in this. I am still here. I am still believing. Please don't let me miss you in this season.\n\nShe put the store-brand sauce in the cart.\n\nShe did not get a miracle in the pasta aisle that day. The numbers did not change. But something in her did. A kind of quiet settled over her that she could not fully explain.\n\nLater, she would call it peace that surpasses understanding. At the time, she just called it making it through the day. Which was sometimes the same thing.`,
+      moral: 'God is not absent from the small, hard, ordinary moments of this season. He is in the pasta aisle with you. He is in every moment you choose to keep believing.',
+    },
+
+    reflectionQuestions: [
+      'Be honest: what has this financial season cost you beyond money? What has it done to your confidence, your relationships, your sense of self?',
+      'Where has shame been lying to you about your worth? What is the truth you need to speak back to it?',
+      'What has God already provided — even in the middle of this — that you might be taking for granted or overlooking right now?',
+      'What does your faith actually look like day to day in this season? Is it getting stronger or is it getting harder to hold?',
+      'What is the difference between trusting God and waiting for God? Which one are you actually doing right now?',
+      'What do you believe God is building in you through this season — not just for you, but for the women who will come behind you who need to hear your testimony?',
+    ],
+    gentleWord: {
+      body: 'This season is not the end of your story. It is the chapter that will make every future chapter make sense. Your breakthrough is not just for you — it is a testimony in the making. Hold on.',
+      closing: 'Faith is not the absence of fear. It is choosing to trust God louder than your circumstances.',
+    },
+
+    playlist: [
+      { title: '"Trust in You"', artist: 'Lauren Daigle' },
+      { title: '"Jireh"', artist: 'Elevation Worship & Maverick City' },
+      { title: '"God Will Make a Way"', artist: 'Don Moen' },
+      { title: '"God Will Make a Way"', artist: 'Shirley Caesar' },
+      { title: '"More Than Enough"', artist: 'Sinach' },
+    ],
+
+    affirmations: [
+      'My current circumstances are not my final chapter.',
+      'I release shame about where I am financially.',
+      'God is my provider, and He has never failed me.',
+      'I am faithful with what I have, and increase is coming.',
+      'I trust the process even when I cannot see the provision.',
+      'Lack does not disqualify me from great faith.',
+      'My story is not over. The best chapters are still being written.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Broke But Believing Girl,',
+      body: `This season of lack is loud, but it is not the final word over your life. God is not blind to your bills, your responsibilities, or the weight of wanting to do more than your current account allows. Even here, he is teaching you to trust him as Provider, to see creativity where others see dead ends, to recognize that your value was never tied to a dollar amount. There will be a day when you look back from a more stable place and realize he carried you, opened doors, and stretched what you had in ways that did not make sense on paper. Keep believing; you are not just surviving — you are being positioned.\n\nMoney is tight, and that pressure can make you feel small, inadequate, or stuck, but your current finances are only a snapshot, not your identity. You are learning discipline, patience, and how to make a lot out of a little, and those skills will follow you long after this season ends. The girl you are becoming knows how to tell herself the truth about where she is without talking down on who she is. One day you will thank this version of you for not giving up, for still dreaming, planning, and taking small steps even when it felt embarrassing or slow. You are more than your balance, and this will not always be your story.`,
+      closing: 'Love,',
+      signature: 'The You Who Got Her Money Right and Saw Overflow',
+    },
+    letterBackPrompt: 'After reading her chapter, write your own words back to The Broke-But-Believing Girl.',
+  },
+
+  returning: {
+    key: 'returning',
+    letter: 'F',
+    name: 'The Returning Girl',
+    tagline: 'She lost herself — and she is finding her way back home.',
+    color: '#a8c98a',
+    bgGradient: 'linear-gradient(135deg, rgba(168,201,138,0.2), rgba(138,158,140,0.1))',
+    prev: 'broke',
+    next: 'caregiving',
+
+    youAreNotAlone: [
+      '"I was so ashamed of how long I had been lost that I almost didn\'t let myself come back. But home was still there. I was still there. Waiting."',
+      '"I didn\'t know who I was without the relationship, the role, the identity I had built around someone else. Rebuilding was slow. But it was mine."',
+      '"Returning to yourself after losing yourself is one of the hardest and most beautiful things you can do. Nobody talks about how disorienting it feels to find yourself again."',
+    ],
+
+    permissionItems: [
+      'Come back to yourself without shame.',
+      'Take the long road home if you need to.',
+      'Be a beginner again — it is allowed.',
+    ],
+
+    noteFromMe: `I wrote this chapter for the girl who left and came back. Maybe she left a relationship, a dream, a church, a version of herself she had been holding onto for too long. Maybe she left because she had to. Maybe she left because she got lost. Maybe she does not even fully know why she went — only that she did, and that finding her way back has been one of the hardest and holiest things she has ever done.\n\nComing back is not failure. It is not weakness. It is not proof that you could not handle what you stepped away from. It is proof that you know yourself well enough to return when you are ready. And that takes more courage than most people will ever admit.\n\nShe is not the same woman who left. She should not be. The Returning Girl comes back with something she did not have before — wisdom, grace, and the kind of quiet strength that only comes from surviving your own absence.\n\nThis chapter is for her. Welcome home.`,
+
+    devotionScripture: '"He restores my soul." — Psalm 23:3',
+    devotionBody: `There is a particular kind of shame that follows the woman who left. She left the dream, the relationship, the community, the version of herself she thought she was supposed to be. And the world — sometimes even the people she loves most — will not let her forget it. But God is not the world. And God has never once called her back to shame her.\n\nRestoration is not the same as returning to what was. It is being brought back to who you were always meant to be — before the wounds, before the weight, before the wandering. God does not restore broken things back to their broken state. He restores them to their purpose.\n\nThe Returning Girl carries something no one else carries. She carries the particular wisdom of someone who has been away and come home — who knows the value of what she almost lost because she lived without it for a season. That is not a liability. That is a gift.\n\nShe is not behind. She is not disqualified. She is not too late. She is exactly where she is supposed to be, on exactly the timeline God ordained for her return.`,
+    devotionReflection: 'What did your time away teach you that you could not have learned any other way?',
+
+    shortStory: {
+      title: 'The First Morning Back',
+      body: `She woke up one morning and realized she was ready.\n\nNot ready in a grand, dramatic way. Not standing in the rain with a new haircut and a speech. Just ready in the quiet, ordinary way that real change usually begins — a small shift in the chest, a softening of something that had been hard for too long.\n\nShe had been gone from herself for a while. Not geographically. She had lived in the same apartment, gone to the same job, talked to the same people. But somewhere in a relationship that dimmed her, a grief that swallowed her, a season that simply took too much — she had stopped being recognizable to herself.\n\nThat morning, she did something she had not done in a long time. She made coffee the way she liked it — not the way he liked it, not the way she had gotten used to having it, but the way she actually liked it. A small thing. A ridiculous thing, maybe. But she sat with that cup for a moment and thought: I remember this. I remember me.\n\nShe did not have a plan for the rest of her life. She just had that one morning, and that cup of coffee, and the first faint signal of herself returning. It was enough to begin.`,
+      moral: 'The returning does not have to be grand. It can start with coffee. It can start with one honest conversation. It can start with this page. It starts wherever you let it.',
+    },
+
+    reflectionQuestions: [
+      'What did you leave — and why? You do not have to justify it. Just name it honestly.',
+      'What surprised you most about the season you spent away?',
+      'What do you know now that you did not know before you left?',
+      'What have you been most afraid people will think or say about your return?',
+      'What is one thing you are leaving behind — for good — as you step back in?',
+      'What does coming home feel like in your body right now? Describe it without judgment.',
+    ],
+    gentleWord: {
+      body: 'You did not lose yourself forever. You took a detour. And the woman who took that detour learned things the shorter road never would have taught her. All of it counts. All of it is part of you.',
+      closing: 'You are not starting over. You are starting again — with everything you now know.',
+    },
+
+    playlist: [
+      { title: '"Take Me Back"', artist: 'Maverick City Music' },
+      { title: '"Jireh"', artist: 'Elevation Worship & Maverick City' },
+      { title: '"Redeemed"', artist: 'Big Daddy Weave' },
+      { title: '"Come As You Are"', artist: 'Crowder' },
+      { title: '"Waymaker"', artist: 'Sinach' },
+    ],
+
+    affirmations: [
+      'I am allowed to come back.',
+      'My return is not weakness — it is wisdom.',
+      'Everything that belongs to me is still mine.',
+      'I do not need to earn my way back. Grace already made the way.',
+      'I am not behind. I am exactly on time.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Returning Girl,',
+      body: `I see you standing at the door, hand on the knob, wondering if you still have the right to walk back in. You do. You always did.\n\nI want you to know something that no one may have told you yet: the bravest thing you have done is not what you accomplished before you left. It is the fact that you came back. That you chose, in spite of everything — the shame, the fear, the voices telling you it was too late — to turn around and try again.\n\nYou are not the prodigal who squandered everything. You are the woman who got lost and found her way home. And there is no shame in that story. There is only grace.\n\nWhatever you left — a dream, a faith, a community, a version of yourself — it has been waiting for you. Not to punish you. Not to remind you of how long you were gone. But to welcome you back into the fullness of who you have always been meant to be.\n\nYou are not starting over. You are starting from here. And here is further than you think.`,
+      closing: 'With love,',
+      signature: 'De\'Audra',
+    },
+    letterBackPrompt: 'After reading her chapter, write your own words back to The Returning Girl.',
+
+    specialTabName: 'Welcome Home Letter',
+    specialPage: `
+      <div style="text-align:center; margin-bottom:2rem;">
+        <h2 class="section-title">Welcome Back, HER. We Missed You.</h2>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve); max-width:500px; margin:0 auto 2rem; line-height:1.8;">Not the version of you that had it all together. Not the version that never stumbled or lost herself or needed a moment to just stop. We missed YOU — the real one. The one who is standing here right now, turning this page, choosing to come back.</p>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--text); max-width:500px; margin:0 auto 1rem; line-height:1.8;">You did not fail by stepping away. You did not lose by taking time. You were not broken — you were resting. You were healing. You were doing the quiet, invisible work of becoming someone who could return stronger than she left.</p>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--text); max-width:500px; margin:0 auto 1rem; line-height:1.8;">And now you are back. And everything that is yours is still yours. Your calling. Your confidence. Your crown. None of it went anywhere while you were gone.</p>
+        <p style="font-family:'Dancing Script',cursive; font-size:26px; color:var(--dusty-rose); margin-top:1rem;">So welcome home, HER. We are so glad you are here.</p>
+      </div>
+      <div style="background:var(--warm-white); border-radius:16px; padding:2rem; border:1px solid rgba(201,169,110,0.2);">
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; color:var(--dark); margin-bottom:0.5rem;">Write Yourself a Welcome Home Letter</h3>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:1rem; font-style:italic;">You have been gone for a while. What do you want to say to yourself now that you are back?</p>
+        <div style="font-family:'Dancing Script',cursive; font-size:20px; color:var(--dusty-rose); margin-bottom:1rem;">Dear Her,</div>
+        <textarea class="rq-textarea" style="min-height:250px;" placeholder="Write your welcome home letter here..."></textarea>
+        <div style="margin-top:1rem; font-family:'Dancing Script',cursive; font-size:20px; color:var(--mauve);">Signed with love, _______________</div>
+        <div style="margin-top:0.5rem; font-family:'Dancing Script',cursive; font-size:18px; color:var(--mauve);">HER. Welcome home. 🌸</div>
+      </div>
+    `,
+  },
+
+  caregiving: {
+    key: 'caregiving',
+    letter: 'G',
+    name: 'The Caregiving Girl',
+    tagline: 'She gives and gives. This chapter gives back to her.',
+    color: '#c98ab5',
+    bgGradient: 'linear-gradient(135deg, rgba(201,138,181,0.2), rgba(184,169,201,0.1))',
+    prev: 'returning',
+    next: 'quiet',
+
+    youAreNotAlone: [
+      '"I gave so much for so long that I forgot I was allowed to have needs. This chapter reminded me I am a person, not just a role."',
+      '"I cried the first time I asked for help. Real help. And when people showed up for me, I realized I had been robbing them of the blessing of giving by refusing to receive."',
+      '"The guilt of resting almost broke me. But I could not pour from empty. I had to fill myself up so I could actually show up."',
+    ],
+
+    permissionItems: [
+      'I give myself permission to rest without guilt.',
+      'I give myself permission to say no — even to people I love.',
+      'I give myself permission to ask for help without it meaning I have failed.',
+      'I give myself permission to have needs and to name them out loud.',
+      'I give myself permission to receive care, love, and support.',
+      'I give myself permission to be a whole person — not just a role.',
+    ],
+
+    noteFromMe: `This chapter is a love letter. To you. Specifically, deeply, unapologetically to you.\n\nBecause you give love so freely and so completely that I am not sure anyone has ever stopped long enough to love you back the way you deserve. You are the one who remembers. The one who shows up. The one who stays. The one who gives and gives and gives with a generosity that looks effortless from the outside but costs you everything on the inside.\n\nYou matter just as much as everyone you take care of. That is not a nice thought. That is the truth.\n\nThe world tells caregivers that their worth is in their giving. That the measure of a good woman is how well she takes care of others. And there is something beautiful in care — God calls us to love one another, after all. But He also calls us to love our neighbor as ourselves. That as means the love is supposed to be equal. The care is supposed to be mutual.\n\nSomething has gotten out of balance. And this chapter is about finding your way back to being on your own list. Not at the bottom. Not as an afterthought. At the top, or at least somewhere in the middle, where you actually remember to get there.\n\nWith deep honor for everything you carry,`,
+
+    devotionScripture: '"Come to me, all you who are weary and burdened, and I will give you rest." — Matthew 11:28',
+    devotionBody: `There is a particular exhaustion that belongs to the Caregiver Girl. It is not just physical tiredness — it is the bone-deep weariness of someone who has been holding the world together for so long she cannot remember what it felt like to be held. She does not just need sleep. She needs someone to show up for her the way she shows up for everyone else.\n\nThe world will let her keep giving until there is nothing left. The world does not tell her when to stop. The world celebrates her selflessness and calls her strong while quietly depending on her depletion. But God is not the world.\n\nScripture does not say love your neighbor instead of yourself. It says love your neighbor as yourself — which assumes a baseline of self-love that the Caregiver Girl has often abandoned entirely. To love well, she must first be filled. To give sustainably, she must learn to receive. This is not selfishness. This is stewardship of the vessel God placed His spirit inside.\n\nThe Caregiver Girl is not called to give herself away. She is called to give from the overflow. And overflow requires replenishment.`,
+    devotionReflection: 'When did you last let someone take care of you — and how did it feel?',
+
+    shortStory: {
+      title: 'The Morning She Stopped',
+      body: `Renee had not been sick in years. Not because she was particularly healthy — but because she did not have time to be sick. There was always someone who needed her: her mother with the bad hip, her two kids, her best friend going through the divorce. Sickness was a luxury she had quietly decided she could not afford.\n\nSo when the fever hit on a Thursday evening, her first thought was not rest. It was logistics. Who would pick up the kids? Who would check on her mother? She was already reaching for her phone when her daughter — eleven years old and more perceptive than she had any right to be — sat beside her on the couch, took the phone gently out of her hand, and said, "Mama. I got it."\n\nHer daughter made soup from a can. It was not good soup. It was slightly too salty and lukewarm in the middle. But Renee ate every bite, wrapped in a blanket her daughter had brought without being asked, and cried quietly into the bowl.\n\nShe had spent so many years being the one who brought the soup that she had completely forgotten how it felt to receive it. How holy it was. How necessary.\n\nThe soup changed something in her that Thursday. She decided, right there on the couch, that she was going to let herself be loved. Not just occasionally. Regularly.`,
+      moral: 'You are worthy of the same love you so freely give. Receiving is not weakness — it is wholeness. Let people in. Let them bring you soup. Let yourself be loved.',
+    },
+
+    reflectionQuestions: [
+      'Who do you give the most to — and when did you last receive something from them?',
+      'What does receiving feel like in your body? Comfortable? Guilty? Unfamiliar? Why?',
+      'What would happen if you said no this week — just once — to something you would normally say yes to?',
+      'What have you been giving that was never yours to carry?',
+      'What does self-care actually look like for you — not the Instagram version, the real version?',
+      'If someone loved you the way you love others, what would that look like?',
+    ],
+    gentleWord: {
+      body: 'You cannot pour from an empty vessel. But more than that — you deserve to be full for your own sake, not just so you can keep giving. Your life is not only about what you provide for others. It is also about what you experience, enjoy, and receive. You are allowed to live, not just serve.',
+      closing: 'You are not just a giver. You are also someone who deserves to be given to. Let that be true.',
+    },
+
+    playlist: [
+      { title: '"I Need You to Survive"', artist: 'Hezekiah Walker' },
+      { title: '"You Say"', artist: 'Lauren Daigle' },
+      { title: '"Breathe"', artist: 'Marie Barnett' },
+      { title: '"Rest on Us"', artist: 'Maverick City Music' },
+      { title: '"Fill Me Up"', artist: 'Casey J' },
+    ],
+
+    affirmations: [
+      'I am allowed to receive as freely as I give.',
+      'Resting is not abandoning the people I love — it is protecting them from a depleted version of me.',
+      'My needs matter. My rest matters.',
+      'My limits are not failures.',
+      'I give from overflow — not from empty.',
+      'Being cared for does not make me weak. It makes me whole.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Caregiving Girl,',
+      body: `Let someone bring you soup. Let someone sit with you. Let someone say "I got it" and actually mean it. You have spent so long being the strong one that you have forgotten you are allowed to be held too. Today, this chapter is giving you permission.\n\nI see how hard you work to love the people in your life. I see the early mornings and the late nights and the way you say yes when every part of your body is begging you to say no. I see the love in what you do. And it is real. It is beautiful. It is a gift.\n\nBut I also see you disappearing. Piece by piece. And I need you to hear this: the world does not need you to disappear. It needs you whole.\n\nYou are not more loving when you are depleted. You are not more faithful when you are running on empty. You are not more valuable when you are invisible. You are most useful to the people you love when you are most fully yourself — rested, filled, grounded, and okay.`,
+      closing: 'With love,',
+      signature: 'De\'Audra',
+    },
+    letterBackPrompt: 'Write a letter back. What do you want to say to yourself right now — to the woman who has been giving everything and asking for nothing?',
+
+    specialTabName: 'My Non-Negotiables',
+    specialPage: `
+      <div>
+        <h2 class="section-title">My Non-Negotiables</h2>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve); margin-bottom:2rem; line-height:1.8;">She gives and gives. But these — these she keeps. Fill in each line with what YOU refuse to give away any longer.</p>
+        <div style="display:flex; flex-direction:column; gap:1.2rem;">
+          ${[
+            'I refuse to sacrifice my',
+            'I refuse to give away my',
+            'I will no longer apologize for needing',
+            'My ____________ is not available for everyone. It belongs to',
+            'I am allowed to say no to ____________ without explaining myself.',
+            'From this day forward, I choose to protect my',
+          ].map((prompt, i) => `
+            <div style="background:var(--warm-white); border-radius:12px; padding:1.2rem 1.5rem; border:1px solid rgba(201,169,110,0.2);">
+              <div style="font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem;">${i + 1}</div>
+              <div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--dark); margin-bottom:0.5rem;">${prompt}</div>
+              <input type="text" style="width:100%; border:none; border-bottom:1px solid var(--blush); background:transparent; font-family:'Dancing Script',cursive; font-size:18px; color:var(--dark); padding:4px 0; outline:none;" placeholder="write it here...">
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:2rem; padding:1.5rem; background:var(--parchment); border-radius:12px; text-align:center;">
+          <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve);">Now say all six out loud. She needs to hear her own voice say it. 💕</p>
+        </div>
+      </div>
+    `,
+  },
+
+  quiet: {
+    key: 'quiet',
+    letter: 'J',
+    name: 'The Quiet But Strong Girl',
+    tagline: 'Holding everything. Being held by no one. Until now.',
+    color: '#8a8ac9',
+    bgGradient: 'linear-gradient(135deg, rgba(138,138,201,0.2), rgba(184,169,201,0.1))',
+    prev: 'caregiving',
+    next: 'boundary',
+
+    youAreNotAlone: [
+      '"I was so good at being strong that nobody knew I was drowning. I didn\'t even know. I thought the water was just where I lived."',
+      '"Being the strong friend is a gift. Being the strong friend who never lets anyone be strong for you is a slow kind of loneliness."',
+      '"The first time I told someone I wasn\'t okay, I cried for an hour. Not because it was sad — because it was such a relief to finally stop pretending."',
+    ],
+
+    permissionItems: [
+      'Ask for help without explaining why.',
+      'Not be okay — out loud, in front of someone.',
+      'Let someone else carry something for once.',
+    ],
+
+    noteFromMe: `I see you. And I want you to know how rare it is that someone does.\n\nBecause you have made yourself very easy to overlook. Not on purpose — but because you have been so busy being the one who holds it together that nobody has ever thought to ask if you are okay. You give the impression of someone who is always okay. And so nobody checks.\n\nBut I am checking. How are you? Really?\n\nThe Quiet Strong Girl carries more than anyone knows. She has learned to absorb everyone else's panic and reflect back calm. She has learned to swallow her own needs so efficiently that sometimes she forgets she has them. She shows up for everyone. She remembers everything. She holds the family, the friendships, the team — quietly, without applause, because that is simply who she is.\n\nAnd she is exhausted in a way she rarely admits, even to herself.\n\nThis chapter is the first place in a long time where nobody needs anything from you. You do not have to hold anything here. You do not have to be strong. You can just be.\n\nLet someone else hold you for a few pages. That someone is this chapter. Let it in.\n\nWith deep, deep appreciation for who you are,`,
+
+    devotionScripture: '"The Lord is my strength and my shield; my heart trusts in Him, and He helps me." — Psalm 28:7',
+    devotionBody: `The Lord is my strength. Not my resilience. Not my capacity to push through. Not my ability to hold it all together without anyone noticing the weight. Him. He is the source of the strength you have been crediting entirely to yourself.\n\nThe Quiet Strong Girl has learned to be so capable that she has accidentally convinced everyone — including herself — that she does not need anything. She carries because she can. She absorbs because she is built for it. She shows up because that is simply who she is. And somewhere in all of that, her own needs got buried so deep that she forgot she had them.\n\nBut God is not just your strength. He is also your shield. Which means He is your protector, your covering, your safe place. He is not only calling you to carry — He is calling you to be carried.\n\nYou are allowed to need God. You are allowed to need people. Letting others in is not a contradiction of your strength — it is the fullest expression of your trust. The strongest women are not the ones who never need anything. They are the ones who know exactly where to go when they do.`,
+    devotionReflection: 'What are you carrying right now that you have not given to God — or to a safe person in your life? What would it feel like to set it down, even for just today?',
+
+    shortStory: {
+      title: 'The Night She Let Someone See',
+      body: `She had been fine for so long that she did not even know how to start being not fine in front of someone.\n\nHer friend had called to check on her — a real check-in, not the kind that expects the answer to be good. Something in the question unlocked something she had been keeping very carefully locked.\n\nShe tried to say she was okay. The words would not come.\n\nWhat came instead was the truth. That she was tired. That she had been tired for a long time and nobody had noticed because she was very good at not looking it. That she was holding things she did not know how to put down. That she cried sometimes on her drive home from places where she had just finished being strong for everyone else.\n\nHer friend was quiet for a moment on the other end of the line. Then she said: I had no idea. I am so sorry I did not ask sooner. I am here.\n\nThose four words — I am here — did something to her that a hundred "I am proud of you"s never had. Because she did not need applause. She needed to be known.\n\nThat night she slept differently than she had in months. Not because anything had changed. Because someone finally knew.`,
+      moral: 'Being known is not a weakness. It is the thing your soul has been hungry for. You are allowed to let people in. You are allowed to be seen.',
+    },
+
+    reflectionQuestions: [
+      'When is the last time someone asked how you were doing — and you actually told the truth instead of deflecting or minimizing?',
+      'What are you carrying right now that nobody knows about? Write it here. Let this page hold it.',
+      'What do you need that you have not asked for? Why have you not asked?',
+      'Who is allowed to see you fall apart? If no one comes to mind, what has that isolation cost you?',
+      'Where in your life have you confused being strong with not having needs? What would it look like to let yourself have needs out loud?',
+      'What would you tell a friend who was carrying everything you are carrying right now, silently, alone?',
+    ],
+    gentleWord: {
+      body: 'Strength was never meant to be carried alone. Even the strongest women need someone to lean on. Needing people does not make you less strong. It makes you human. And human is what you are allowed to be.',
+      closing: 'You have held so much for so long. It is okay to put some of it down. It is okay to be held.',
+    },
+
+    playlist: [
+      { title: '"Shoulders"', artist: 'for KING & COUNTRY' },
+      { title: '"Strong Enough"', artist: 'Matthew West' },
+      { title: '"Held"', artist: 'Natalie Grant' },
+      { title: '"I Surrender All"', artist: 'CeCe Winans' },
+      { title: '"Stand"', artist: 'Donnie McClurkin' },
+    ],
+
+    affirmations: [
+      'I am allowed to need people. Needing is not weakness.',
+      'My strength does not require me to suffer silently.',
+      'I release the role of "the one who holds it all together."',
+      'God sees everything I carry in quiet — and He honors it.',
+      'I deserve support as much as I give it.',
+      'I will let myself be held today.',
+      'It is safe for me to be vulnerable.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Quiet Strong Girl,',
+      body: `People lean on you because you are steady, and sometimes they forget that even pillars get tired. God sees the weight you carry in silence, the prayers you never say out loud, the way you hold everyone together while wondering who will hold you. He did not call you to be everyone's savior; that job is already taken. You are allowed to lean back into his strength, to let him be the one you fall apart with, to admit that strong and struggling can both be true. There is a softness he wants to restore in you — strength that is rooted in him, not in how much you can endure.\n\nYou are the one people count on, the one who rarely falls apart in public, and because of that they assume you are always okay. But you know what it costs to hold so much steady — missed rest, postponed needs, and a quiet loneliness that creeps in after everyone leaves. Your strength is real, and it's also allowed to be tender. Let someone else carry for a minute. Let yourself ask for help without shame. The version of you who still shows up but doesn't run on empty is possible, and she wants you to stop treating vulnerability like a failure.`,
+      closing: 'Love,',
+      signature: 'The You Who Learned to Receive',
+    },
+    letterBackPrompt: 'Write a letter back to yourself. What does the Quiet Strong Girl inside you need to hear?',
+
+    specialTabName: 'Never Said Out Loud',
+    specialPage: `
+      <div>
+        <h2 class="section-title">What I Have Never Said Out Loud</h2>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--text); line-height:1.9; margin-bottom:2rem;">
+          <p>She is the strong one. She always has been. She shows up. She holds it together. She carries what others cannot. And she does it quietly — because that is just who she is.</p>
+          <p style="margin-top:1rem;">But quiet does not mean empty. And strong does not mean she has nothing she needs to say.</p>
+          <p style="margin-top:1rem;">This page is for the things she has never said out loud. The thoughts she keeps to herself. The feelings she has held in for so long she almost forgot they were there. The words she has never given herself permission to speak.</p>
+          <p style="margin-top:1rem; font-style:italic; color:var(--mauve);">Just her. And the page. And finally — a space to say it.</p>
+        </div>
+        <div style="background:var(--warm-white); border-radius:16px; padding:2rem; border:1px solid rgba(201,169,110,0.2);">
+          <p style="font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">Say it here. All of it.</p>
+          <textarea class="rq-textarea" style="min-height:300px; font-family:'Dancing Script',cursive; font-size:18px;" placeholder="The things I have never said out loud..."></textarea>
+        </div>
+        <div style="margin-top:1.5rem; padding:1.5rem; background:var(--parchment); border-radius:12px; text-align:center;">
+          <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve);">You said it. And the saying of it was everything. 💙</p>
+        </div>
+      </div>
+    `,
+  },
+
+  boundary: {
+    key: 'boundary',
+    letter: 'I',
+    name: 'The Boundary Girl',
+    tagline: 'Her NO is worthy. Her limits are love.',
+    color: '#c9a98a',
+    bgGradient: 'linear-gradient(135deg, rgba(201,169,138,0.2), rgba(201,150,138,0.1))',
+    prev: 'quiet',
+    next: 'leveling',
+
+    youAreNotAlone: [
+      '"The first boundary I set felt like betrayal. The tenth felt like freedom. I am still learning — but I am never going back."',
+      '"My no is not a rejection. It is a redirection — toward the things and people I can actually show up for fully."',
+      '"I thought setting limits meant I loved people less. It turns out it meant I could love them better — because I was finally showing up whole."',
+    ],
+
+    permissionItems: [
+      'I give myself permission to say no without a lengthy explanation.',
+      'I give myself permission to protect my peace — even from people I love.',
+      'I give myself permission to change my mind about what I will and will not accept.',
+      'I give myself permission to set a limit and hold it, even when someone pushes back.',
+      'I give myself permission to stop shrinking myself to make other people comfortable.',
+      'I give myself permission to be a woman with standards — and to hold them with grace.',
+    ],
+
+    noteFromMe: `If you are here, you are probably somewhere in the messy, uncomfortable, necessary work of learning to say no. And I want to start by saying: the fact that it is hard does not mean you are doing it wrong. It means you are doing something that matters.\n\nBoundaries are not walls. They are the outline of who you are.\n\nFor a long time, many of us were taught — explicitly or quietly — that being a good woman meant being available. Agreeable. Accommodating. That saying no was selfish. That protecting your peace made you difficult. That the right thing to do was always to keep giving, even when you had nothing left to give.\n\nThose were not truth. They were training — and it is okay to unlearn them.\n\nThe Boundary Girl is not mean. She is not cold. She is not unfair. She is a woman who finally understands that she cannot pour from an empty cup, that she is allowed to protect her time and energy, and that no is a complete sentence that requires no explanation.\n\nThe guilt you feel? That is the old training talking. It does not mean you did something wrong. It means you did something new.\n\nKeep going. You are doing something special here.\n\nWith full support of your NO,`,
+
+    devotionScripture: '"Let what you say be simply Yes or No; anything more than this comes from evil." — Matthew 5:37',
+    devotionBody: `Somewhere along the way, someone taught her that boundaries were selfish. That protecting herself was unloving. That a good woman always made room, always said yes, always found a way to accommodate whoever was asking. And she believed it — because she wanted to be good.\n\nBut here is what no one told her: Jesus had boundaries. He left crowds to rest. He said no to things that were not His assignment. He walked away from people who wanted to use Him for purposes other than His calling. He was the most loving person who ever lived — and He said no regularly.\n\nA boundary is not the absence of love. It is love with clarity. It is love that says: I care about you AND I care about myself, and this is what I can offer without destroying one of us.\n\nThe Boundary Girl is not learning to love less. She is learning to love better. She is learning that her no protects her yes — that the things and people she chooses to show up for fully deserve her full presence, and that presence is only possible when she is whole.`,
+    devotionReflection: 'What is one boundary you have been afraid to set — and what has that fear cost you?',
+
+    shortStory: {
+      title: 'The Word She Had Been Afraid to Say',
+      body: `Camille had never said no to her mother. Not once. Not in thirty-four years. And she had spent those thirty-four years quietly resentful and endlessly exhausted, which she thought were just the natural conditions of loving a difficult woman.\n\nThen her therapist said something that stopped her cold: "You are not resentful because you love her. You are resentful because you have never given yourself permission to protect yourself from her."\n\nCamille spent two weeks thinking about that sentence. She turned it over while she was driving, while she was in the shower, while she was lying awake at 2 a.m. wondering why she could never feel at peace. And slowly, reluctantly, she admitted that it was true.\n\nThe first no was small. Her mother wanted her to cancel a work event to come to a family dinner that had been rescheduled three times at her mother's request. Camille typed the message, deleted it, typed it again, sat with her phone for twenty minutes — and then sent it. "I can't make it this time. I love you."\n\nHer mother was upset. There was a tense phone call. There were guilt trips. And Camille sat through all of it, shaking slightly, and did not change her answer.\n\nShe went to her work event. She had a good time. She called her mother the next day. And something had shifted.`,
+      moral: 'The first no is the hardest. It gets easier. And every no you mean is making space for a life that is actually yours.',
+    },
+
+    reflectionQuestions: [
+      'Where in your life are you saying yes when you mean no — and why?',
+      'What did you learn growing up about what it meant to say no? Where did that belief come from?',
+      'Think of a time you held a boundary. What did it cost you? What did it give you?',
+      'Who in your life consistently pushes past your limits — and what have you been afraid to do about it?',
+      'What is one thing you would say no to tomorrow if you truly believed your no was valid?',
+      'What would your life look like if you only said yes to the things that truly aligned with who you are?',
+    ],
+    gentleWord: {
+      body: 'A boundary is not a punishment — not for you, and not for the people in your life. It is clarity. It is love with edges. It is the thing that makes it possible for you to actually keep showing up. Setting limits is not the end of a relationship. It is the beginning of an honest one.',
+      closing: 'No is not a bad word. It is the word that makes all your yes answers actually mean something.',
+    },
+
+    playlist: [
+      { title: '"No"', artist: 'Meghan Trainor' },
+      { title: '"Enough"', artist: 'Koryn Hawthorne' },
+      { title: '"Stand"', artist: 'Donnie McClurkin' },
+      { title: '"Worth"', artist: 'Anthony Brown & Group TherAPy' },
+      { title: '"I Am Not Afraid"', artist: 'Tasha Cobbs Leonard' },
+    ],
+
+    affirmations: [
+      'My no is complete. It does not need a paragraph.',
+      'Protecting myself is not selfish. It is sacred.',
+      'I am allowed to change what I accept.',
+      'My boundaries are not walls. They are wisdom.',
+      'I can love someone and still not make myself available to be hurt by them.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Boundary Girl,',
+      body: `I know how hard it is to say no when you have spent your whole life saying yes. I know the guilt that follows. The second-guessing. The way you lie awake wondering if you were too harsh, too cold, too much.\n\nYou were not too much. You were finally enough — enough for yourself.\n\nA woman who knows her limits is not difficult. She is clear. And clarity is one of the greatest gifts you can give the people in your life. When you say no to what drains you, you say yes to showing up fully for what matters. When you protect your peace, you protect your purpose. When you hold your boundary, you hold your integrity.\n\nThe people who are meant to be in your life will respect your limits. The ones who push back hardest are often the ones who have benefited most from you having none. That is information. Let it be information.\n\nYou are not building a wall. You are building a life. And a life worth living requires knowing what you will and will not allow inside it.`,
+      closing: 'With love,',
+      signature: 'De\'Audra',
+    },
+    letterBackPrompt: 'Write back. What boundary do you need to set — that you have been putting off? Write it here first. Then go say it.',
+
+    specialTabName: 'My Boundary Statement',
+    specialPage: `
+      <div>
+        <h2 class="section-title">My Boundary Statement</h2>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve); margin-bottom:2rem;">A boundary is not a wall. It is a door — and she decides who has the key.</p>
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          ${[
+            'I am no longer available for',
+            'I choose to protect my',
+            'I will no longer accept',
+            'The people I allow close to me must respect my',
+            'I release myself from the obligation to',
+            'My peace is worth more than',
+            'From this day forward, I give myself permission to',
+          ].map(prompt => `
+            <div style="background:var(--warm-white); border-radius:12px; padding:1.2rem 1.5rem; border:1px solid rgba(201,169,110,0.2);">
+              <div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--dark); margin-bottom:0.5rem;">${prompt}</div>
+              <input type="text" style="width:100%; border:none; border-bottom:1px solid var(--blush); background:transparent; font-family:'Dancing Script',cursive; font-size:18px; color:var(--dark); padding:4px 0; outline:none;" placeholder="write it here...">
+            </div>
+          `).join('')}
+        </div>
+        <div style="margin-top:2rem; padding:1.5rem; background:var(--parchment); border-radius:12px; text-align:center; border:1px solid rgba(201,169,110,0.2);">
+          <p style="font-family:'Dancing Script',cursive; font-size:22px; color:var(--dusty-rose); margin-bottom:0.3rem;">Her NO is holy.</p>
+          <p style="font-family:'Dancing Script',cursive; font-size:22px; color:var(--dusty-rose); margin-bottom:0.3rem;">Her boundaries are biblical.</p>
+          <p style="font-family:'Dancing Script',cursive; font-size:22px; color:var(--dusty-rose);">Her peace is non-negotiable. 🙏</p>
+        </div>
+      </div>
+    `,
+  },
+
+  leveling: {
+    key: 'leveling',
+    letter: 'C',
+    name: 'The Leveling Up Girl',
+    tagline: 'She is building something the world hasn\'t seen yet.',
+    color: '#8ac9a9',
+    bgGradient: 'linear-gradient(135deg, rgba(138,201,169,0.2), rgba(138,158,140,0.1))',
+    prev: 'boundary',
+    next: 'vision',
+
+    youAreNotAlone: [
+      '"I was so afraid I was doing too much. Then I realized I was just finally doing what I was made for."',
+      '"Growth felt lonely because I outgrew some spaces. But I kept going — and I found my people on the other side."',
+      '"The leveling up nobody talks about is the part where you have to let go of who you were to make room for who you\'re becoming."',
+    ],
+
+    permissionItems: [
+      'Outgrow spaces without guilt.',
+      'Want more without shame.',
+      'Become who God designed you to be.',
+    ],
+
+    noteFromMe: `You are in one of the most exciting and terrifying seasons a person can be in — and I want you to know I see both of those things at once.\n\nBecause leveling up is not just ambition and vision boards. It is also 3 a.m. doubt. It is watching people you love not understand what you are building. It is doing the work consistently when nothing has paid off yet and you cannot tell if you are brave or just stubborn.\n\nIt is both. You are both.\n\nKeep going. Not because it will be easy. Because it is yours.\n\nI have watched women in this season talk themselves out of their own calling because the gap between where they were and where they were going felt too wide. Do not let the gap lie to you. Every woman who ever built something real had to live in that gap for a while. The gap is where the growth actually happens.\n\nThis chapter is not going to hype you up with empty motivation. It is going to sit with you in the real work — the discipline, the doubt, the decision to keep choosing your dream even when it is not choosing you back yet.\n\nYou were made for this. Now let's go.\n\nWith fire and faith,`,
+
+    devotionScripture: '"I can do all things through Christ who strengthens me." — Philippians 4:13',
+    devotionBody: `This verse is often quoted as a success anthem — a battle cry for achievement. And it is that. But read in its full context, Paul wrote these words from prison. He was not climbing a ladder. He was sitting in a cell. Which means this is not just a verse for when things are going well. It is a verse for the woman who is still building in the dark.\n\nYou are in a season of becoming. And becoming is not comfortable. It requires you to outgrow spaces that used to fit. It requires conversations that are hard, sacrifices that feel unreasonable, and a consistency that nobody sees or applauds. It requires you to believe in something you cannot fully see yet.\n\nChrist who strengthens you is not only present in the wins. He is in the 3 a.m. doubt. He is in the rejected pitch and the delayed breakthrough and the day you almost quit and did not. His strength shows up not to carry you around the hard work, but through it — building you into the woman the vision requires.\n\nYou are not behind. You are being built. The gap between where you are and where you are going is not a punishment — it is a preparation. Stay faithful to the small things. The small things are the foundation.`,
+    devotionReflection: 'What is one thing God is asking you to be faithful in right now — before the breakthrough, before the applause, before anyone else can see what you are building?',
+
+    shortStory: {
+      title: 'The Night Before It Changed',
+      body: `She almost quit on a Wednesday.\n\nNot dramatically. Not in a way anyone would have noticed. She just sat at her kitchen table at eleven o'clock at night, stared at everything she had been working on, and felt the particular kind of exhaustion that comes not from doing too much but from believing too long with too little evidence.\n\nSix months of early mornings. Six months of after-the-kids-are-in-bed working. Six months of believing something was coming that had not come yet.\n\nShe closed her laptop. She told herself she would figure it out tomorrow.\n\nBut before she went to bed, she did one small thing. She wrote down — just for herself, in a notebook nobody would ever read — everything she had built in those six months. Not what she had not done. What she had done.\n\nIt took up two pages.\n\nShe sat with that for a long time. She did not quit that night. And two months later, the thing she had been building quietly began to move.\n\nShe would look back later and realize: the night she almost quit was the night before it changed.`,
+      moral: 'The gap between where you are and where you are going is not proof that you are failing. It is the training ground. Keep showing up.',
+    },
+
+    reflectionQuestions: [
+      'What exactly are you building right now? Write it out as specifically as you can — not the dream version, the real current version.',
+      'What is the biggest thing standing between you and your next level? Is it external, or is it something inside you?',
+      'Where are you playing small when you know you were called to go bigger? What would it look like to take up more space?',
+      'Who around you truly believes in what you are building? And are you letting them pour into you, or are you carrying this alone?',
+      'What would you do in the next 30 days if you were not afraid of failing? Write it out — then circle the one thing you will actually do.',
+      'What has God already brought you through that proves He can be trusted with this next chapter?',
+    ],
+    gentleWord: {
+      body: 'The woman you are becoming is already proud of the woman you are right now — the one doing the work before the results show up. That takes more faith than most people will ever understand.',
+      closing: 'You are not behind. You are being built. There is a difference.',
+    },
+
+    playlist: [
+      { title: '"Do It Again"', artist: 'Elevation Worship' },
+      { title: '"Unstoppable God"', artist: 'Sanctus Real' },
+      { title: '"For Every Mountain"', artist: 'Kurt Carr' },
+      { title: '"Way Maker"', artist: 'Sinach' },
+      { title: '"Winning"', artist: 'Beyoncé' },
+    ],
+
+    affirmations: [
+      'I am not too ambitious. I am exactly as driven as God made me.',
+      'Growth is not betrayal — it is obedience to my calling.',
+      'I release the guilt of outgrowing what no longer fits.',
+      'I am allowed to want more and work toward it unapologetically.',
+      'Every closed door is redirecting me to the right one.',
+      'I trust the pace of my becoming.',
+      'God began this good work in me, and He will complete it.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Leveling Up Girl,',
+      body: `You feel the stretch of growth, the uncomfortable space between who you were and who God is shaping you to be. Some days it feels like nothing is moving, but heaven is not confused about the work happening in you. God does not start what he has no intention of finishing, and every small, obedient step you take is proof that his hand is on your story. The process may be slow, and it may cost you old habits, old circles, and old versions of you that felt safe but stunted. Trust that the God who planted the vision in your heart will give you the grace to walk it out, piece by piece.\n\nYou are in that in-between stage where your old life does not fit, but the new one is not fully built yet, and that space can feel lonely. You are rewriting patterns, choosing discipline over distraction, and half the time no one is clapping for it but you. Still, these quiet choices are building a foundation that the future you will stand on with steady feet. There is a version of you living in the results of the work you are doing right now — more stable, more confident, more free. Keep going.`,
+      closing: 'Love,',
+      signature: 'The You Who Saw It Completed',
+    },
+    letterBackPrompt: 'After you\'ve read your chapter, write your own words back to the Leveling Up Girl. What would you say to her?',
+  },
+
+  vision: {
+    key: 'vision',
+    letter: 'H',
+    name: 'The Vision Girl',
+    tagline: 'She does not just dream it. She builds it.',
+    color: '#c9c08a',
+    bgGradient: 'linear-gradient(135deg, rgba(201,192,138,0.2), rgba(201,169,110,0.1))',
+    prev: 'leveling',
+    next: 'soft',
+
+    youAreNotAlone: [
+      '"I saw the vision so clearly it kept me up at night. Everyone thought I was being dramatic. I was just being obedient."',
+      '"God gave me the vision long before He gave me the resources. He was testing whether I would move before I could see the whole picture. I did. And He met me there."',
+      '"The hardest part of having vision is living in the gap between what you can see and what currently exists. I am learning to stay there without losing hope."',
+    ],
+
+    permissionItems: [
+      'Hold the vision even when no one else can see it yet.',
+      'Move toward my calling before I have all the resources.',
+      'Write the vision down and make it plain.',
+      'Believe in what God showed me — even when logic says it is not possible.',
+      'Be the woman who builds the thing that does not exist yet.',
+    ],
+
+    noteFromMe: `I wrote this chapter for the woman who can see exactly where she is going — and some days that vision is the only thing keeping her moving.\n\nShe does not just have dreams. She has clarity. She has seen it — the business, the life, the family, the calling, the version of herself that is fully stepping into everything God placed inside her. She knows what it looks like. She can feel what it will feel like. And that knowing is both a gift and a weight.\n\nBecause knowing where you are going does not make the getting there easy. It just makes the in-between harder. The gap between where she is and where she is going is visible to her in a way it is not visible to people who have not caught the vision yet. And standing in that gap — with a clear picture of the destination and an uncertain path to get there — requires a particular kind of faith.\n\nThis chapter is for her. The woman who is holding the vision when the vision feels far. The woman who is building when no one else can see what she sees yet. The woman who knows — she just knows — that it is coming.`,
+
+    devotionScripture: '"Write the vision; make it plain on tablets, so he may run who reads it." — Habakkuk 2:2',
+    devotionBody: `God told Habakkuk to write the vision down. Not to pray about it. Not to hope about it. Not to hold it quietly inside and trust that it would somehow materialize on its own. Write it down. Make it plain. Make it clear enough that someone reading it can run with it.\n\nThere is something about the act of writing a vision down that changes it. It moves it from internal to external. From imagined to declared. From a dream she holds privately to a thing that now exists in the world. Writing the vision is an act of faith — it says, I believe this is real enough to put it on paper.\n\nThe Vision Girl carries something powerful and something difficult in equal measure. The power is clarity — she can see. Most people are walking through their lives without any real sense of where they are going. She has been given the gift of knowing. But the difficulty is the gap — the space between the vision and its reality, which can feel impossibly wide on the days when progress is slow.\n\nGod does not give you a vision to torment you with what you do not yet have. He gives it to you to orient you. To show you the direction. To keep you moving when the path gets unclear. The vision is not the destination — it is the compass.`,
+    devotionReflection: 'What is the vision you have been carrying — and what would it mean to finally write it down?',
+
+    shortStory: {
+      title: 'The Studio',
+      body: `Jade had been carrying the vision for three years before anyone believed her.\n\nShe could see it clearly: the studio, the classes, the women who would come through the door and leave different than they arrived. She could see the logo, the colors, the name. She could feel the energy of the room before the room existed. She had described it so many times in her journal that the pages were soft from rereading.\n\nBut no one else could see it yet. Her family was supportive in the way that loving people are supportive when they think you are being unrealistic — encouraging, a little worried, very careful with their words.\n\nShe built it anyway. Not all at once. Not dramatically. She saved money and took one class and made one connection and said yes to one small thing that led to another small thing. She moved in the direction of the vision even when the vision felt impossibly far.\n\nThe night she unlocked the door to her studio for the first time — alone, at 11 p.m., with boxes still on the floor and nothing on the walls — she stood in the middle of the room and cried. Not because it was finished. It was not finished. But because it was real.`,
+      moral: 'Write it down. Pray over it. Protect it. The vision is not too big — you have simply not fully grown into it yet. Give yourself time.',
+    },
+
+    reflectionQuestions: [
+      'What is the vision you have been carrying? Write it out as clearly as you can right now.',
+      'What has been the hardest part of holding this vision without seeing the full path?',
+      'Who in your life can see what you see — and who has made you feel like you are dreaming too big?',
+      'What is one small step you could take this week in the direction of the vision?',
+      'What fear is standing between you and the first step?',
+      'If the vision is from God, what does that mean about your responsibility to pursue it?',
+    ],
+    gentleWord: {
+      body: 'The vision was given to you because you have what it takes to carry it. Not perfectly — faithfully. There is a difference. Keep going.',
+      closing: 'The vision is not ahead of its time. You are right on time. Keep building.',
+    },
+
+    playlist: [
+      { title: '"Overcomer"', artist: 'Mandisa' },
+      { title: '"Greater"', artist: 'MercyMe' },
+      { title: '"Do It Again"', artist: 'Elevation Worship' },
+      { title: '"Yes"', artist: 'Shekinah Glory Ministry' },
+      { title: '"Start Right Here"', artist: 'Casting Crowns' },
+    ],
+
+    affirmations: [
+      'My vision is God-given. It is valid.',
+      'I do not need everyone to see it yet. I just need to keep building.',
+      'The gap between here and there is where my faith grows.',
+      'I was made for this. The vision chose me because I was built to carry it.',
+      'I move. I build. I trust. And I watch God close the distance.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Vision Girl,',
+      body: `God gave you dreams that are too big for comfort and just small enough for faith. When the path looks unclear, remember that he delights in making ways where there seems to be none. Your visions are holy — seeded by a Creator who sees the end from the beginning. Pray while you plan, and let obedience be your step-by-step. Even the tiniest move toward that dream matters in the eyes of heaven. Keep writing the vision, keep showing up in the small things, and watch how God rearranges doors to match your courage.\n\nYour ideas are the blueprint for the life you want. They feel risky because they ask you to believe in something not yet visible, but the bravest thing you can do is begin. Start small: write it down, make the first tiny plan, and do one thing that moves you forward this week. Momentum is built by repetition, not by huge leaps. The future you is not a distant fantasy — it's a series of doable choices starting now.`,
+      closing: 'Love,',
+      signature: 'The You Who Built It and Saw It Fulfilled',
+    },
+    letterBackPrompt: 'Write the vision down here. All of it. As clearly as you can. This is your first act of faith — making it plain.',
+
+    specialTabName: 'Vision Tools',
+    specialPage: `
+      <div>
+        <!-- My Vision in 4 Directions -->
+        <h2 class="section-title">My Vision in 4 Directions</h2>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:var(--mauve); margin-bottom:1.5rem; line-height:1.8;">Before she reads another word — she maps her vision. Not perfectly. Not completely. Just honestly. Fill in each quadrant with whatever comes first. No editing. No overthinking. Just HER and what she knows right now.</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1.5rem;">
+          ${[
+            { label: 'What I Am Building', color: 'rgba(201,192,138,0.15)' },
+            { label: 'What I Am Releasing', color: 'rgba(201,150,138,0.15)' },
+            { label: 'What I Need', color: 'rgba(138,181,201,0.15)' },
+            { label: 'What I Am Trusting God For', color: 'rgba(138,201,169,0.15)' },
+          ].map(q => `
+            <div style="background:${q.color}; border-radius:12px; padding:1.2rem; border:1px solid rgba(201,169,110,0.2);">
+              <div style="font-size:11px; letter-spacing:1px; color:var(--gold); margin-bottom:0.8rem; font-weight:500;">${q.label}</div>
+              <textarea style="width:100%; min-height:100px; border:none; background:transparent; font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--dark); resize:none; outline:none; line-height:1.7;" placeholder="Write here..."></textarea>
+            </div>
+          `).join('')}
+        </div>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; color:var(--mauve); text-align:center; margin-bottom:2rem;">She does not have to see the whole staircase. She just has to name the next step.</p>
+
+        <!-- 3 Things Standing Between Me and My Vision -->
+        <div style="border-top:0.5px solid rgba(201,169,110,0.2); padding-top:2rem; margin-top:1rem;">
+          <h2 class="section-title">The 3 Things Standing Between Me and My Vision</h2>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:var(--mauve); margin-bottom:1.5rem; line-height:1.8;">The vision is clear. The calling is real. So what is actually in the way? Name them here. Because you cannot move what you refuse to look at.</p>
+          ${[1, 2, 3].map(n => `
+            <div style="background:var(--warm-white); border-radius:14px; padding:1.5rem; margin-bottom:1rem; border:1px solid rgba(201,169,110,0.2);">
+              <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:1rem;">Thing ${n} — Name It</div>
+              <div style="margin-bottom:0.8rem;">
+                <label style="font-size:12px; color:var(--muted);">What is it?</label>
+                <textarea style="width:100%; min-height:60px; border:1px solid rgba(201,169,110,0.2); border-radius:8px; padding:8px; background:var(--cream); font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--dark); resize:none; outline:none; margin-top:4px;" placeholder="Name it honestly..."></textarea>
+              </div>
+              <div style="margin-bottom:0.8rem;">
+                <label style="font-size:12px; color:var(--muted);">How is it holding you back?</label>
+                <textarea style="width:100%; min-height:60px; border:1px solid rgba(201,169,110,0.2); border-radius:8px; padding:8px; background:var(--cream); font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--dark); resize:none; outline:none; margin-top:4px;" placeholder="Be honest..."></textarea>
+              </div>
+              <div>
+                <label style="font-size:12px; color:var(--muted);">One step toward removing it:</label>
+                <textarea style="width:100%; min-height:60px; border:1px solid rgba(201,169,110,0.2); border-radius:8px; padding:8px; background:var(--cream); font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--dark); resize:none; outline:none; margin-top:4px;" placeholder="Just one step..."></textarea>
+              </div>
+            </div>
+          `).join('')}
+          <div style="padding:1.5rem; background:var(--parchment); border-radius:12px; text-align:center; margin-top:1rem;">
+            <p style="font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--mauve);">She named them. Now she knows what she is working with. That is power. ✨</p>
+          </div>
+        </div>
+      </div>
+    `,
+  },
+
+  soft: {
+    key: 'soft',
+    letter: 'B',
+    name: 'The Soft Life Girl',
+    tagline: 'She chose herself — and she is still learning to enjoy it.',
+    color: '#c98a8a',
+    bgGradient: 'linear-gradient(135deg, rgba(201,138,138,0.2), rgba(201,150,138,0.1))',
+    prev: 'vision',
+    next: null,
+
+    youAreNotAlone: [
+      '"I gave so much for so long that I forgot I was allowed to have needs."',
+      '"I stopped glorifying the grind and started choosing ease where I could. Best decision I ever made."',
+      '"The soft life is not about luxury. It is about refusing to let suffering be your default setting."',
+    ],
+
+    permissionItems: [
+      'Enjoy this season without guilt.',
+      'Receive rest as a gift, not a reward.',
+      'Choose peace over productivity today.',
+    ],
+
+    noteFromMe: `This chapter is for the woman who finally chose herself — and is still learning how to enjoy it.\n\nThere is something nobody tells you about the soft life: choosing peace can feel uncomfortable at first. After years of grinding, performing, and proving — rest can feel wrong. Like you are forgetting something. Like you do not deserve it yet. Like the other shoe is about to drop.\n\nI want you to hear me clearly: You are not forgetting anything. You are finally remembering yourself.\n\nThe soft life is not lazy. It is not selfish. It is not something you have to earn with suffering first. It is the intentional choice to protect your peace, honor your body, enjoy your life, and stop treating yourself like you are the least important person in every room.\n\nIf you chose this chapter, something in you is already there. You are already leaning toward softness. Maybe you are just looking for permission to stay.\n\nThis is your permission. Stay as long as you need.`,
+
+    devotionScripture: '"I have learned, in whatever state I am, to be content." — Philippians 4:11',
+    devotionBody: `Contentment is not something Paul was born with. He says he learned it. That means it was a practice, a discipline, a daily choice — not a personality trait or a gift given to the lucky ones. It was something he had to grow into, often through seasons that were anything but soft.\n\nThe world will try to convince you that choosing peace means settling. That enjoying your life means you lack ambition. That softness is complacency in disguise. But there is a profound difference between settling and being satisfied — between giving up and choosing to be present in what God has given you right now.\n\nThe Soft Life Girl is not hiding from hard things. She has simply decided that she will no longer manufacture suffering in seasons of peace. She will not feel guilty for laughter. She will not minimize her joy to make others comfortable. She will receive the good that is in front of her with open hands.\n\nThis is not the absence of faith for more. This is the presence of gratitude for now. Both can be true at the same time. You can trust God for what is coming while fully enjoying where you are. That is not complacency. That is wisdom.`,
+    devotionReflection: 'Where in your life have you been refusing to enjoy what God has already given you? What would it look like to receive it with open hands today?',
+
+    shortStory: {
+      title: 'The Sunday She Did Nothing',
+      body: `She had blocked the Sunday off three weeks in advance. Nothing on the calendar. No obligations. No plans. Just a day that belonged entirely to her — something she could not remember ever having before.\n\nWhen Sunday came, she did not know what to do with herself.\n\nShe made coffee slowly, without rushing to the next thing. She sat by the window and watched the light change for twenty minutes without picking up her phone. She read four pages of a book she had bought a year ago and never opened. She took a bath at two in the afternoon for no reason other than she wanted to.\n\nAnd the whole time, a voice in the back of her mind kept whispering: you should be doing something productive.\n\nShe noticed it. She did not obey it.\n\nBy evening she had cooked a meal she actually liked, called a friend she had been missing, and watched a movie from beginning to end without pausing it once to fold laundry.\n\nWhen she finally got into bed that night, she realized something had shifted. Not in the world. In her. She had spent an entire day treating herself like someone worth caring for. It was the most radical thing she had done in years.`,
+      moral: 'Softness is not weakness. It is the bravest kind of rebellion for a woman who was taught that her value lives in her output.',
+    },
+
+    reflectionQuestions: [
+      'What did you have to unlearn or let go of to start choosing a softer life? Is there any of it you are still holding onto?',
+      'Where in your life do you still feel guilty for resting, enjoying, or receiving? Why do you think that guilt is there?',
+      'What does your soft life actually look like right now — and what would you add to it if you gave yourself full permission?',
+      'Who in your life celebrates this season with you? Who makes you feel like you should be doing more?',
+      'What is one way you have been performing softness for others instead of genuinely living it for yourself?',
+      'Write a permission slip to yourself — three things you give yourself permission to enjoy, receive, or release without apology.',
+    ],
+    gentleWord: {
+      body: 'The soft life is not a destination. It is a daily practice of choosing yourself on purpose. You are not done becoming — you are just doing it gently now. That is beautiful.',
+      closing: 'Peace is not a reward for your past. It is a choice available to you right now.',
+    },
+
+    playlist: [
+      { title: '"Good Days"', artist: 'SZA' },
+      { title: '"Easy On Me"', artist: 'Adele' },
+      { title: '"Breathe Again"', artist: 'Toni Braxton' },
+      { title: '"Peace Be Still"', artist: 'Lauren Daigle' },
+      { title: '"Joyful"', artist: 'Dante Bowe' },
+    ],
+
+    affirmations: [
+      'I choose peace as a daily practice, not a distant destination.',
+      'Good things are allowed to come to me without suffering first.',
+      'I release the belief that I must be exhausted to be worthy.',
+      'Softness is not weakness — it is a form of power.',
+      'I am allowed to enjoy this season fully, without guilt.',
+      'My joy is not frivolous. It is sacred.',
+      'God desires abundant life for me — and I receive it.',
+    ],
+
+    dearLetter: {
+      salutation: 'Dear Soft Life Girl,',
+      body: `You crave ease, beauty, and gentleness, and that desire is not shallow; it is a reflection of a God who leads beside still waters. Soft life with God is not about running from responsibility; it is about letting him shepherd you so every yes and no comes from a place of peace, not pressure. He wants to show you that his goodness and mercy are allowed to chase you down, even after hard years that taught you to expect struggle. There is a version of you who enjoys what she built, who laughs without checking over her shoulder, who believes that favor is not going to disappear. Let God teach you how to live soft and walk strong at the same time.\n\nYou want a life that feels gentle on your nervous system, where your mornings are not full of dread and your nights are not full of overthinking. That is not asking for too much; that is you waking up to the fact that you deserve better than constant chaos. Soft life is not just candles and trips; it is boundaries, aligned work, and relationships where you do not have to shrink or harden yourself to survive. There is a future version of you who is grateful that you stopped glorifying struggle and started choosing ease where you could.`,
+      closing: 'Love,',
+      signature: 'The You Who Let Peace Lead',
+    },
+    letterBackPrompt: 'After you\'ve read your chapter, write your own words back to the Soft Life Girl. What would you say to her?',
+  },
+
+};
+
+// ══════════════════════════════════════════
+// CHAPTER RENDERER
+// ══════════════════════════════════════════
+
+function renderChapter(key) {
+  const ch = chapters[key];
+  currentChapterKey = key;
+  if (!ch) return;
+
+  const container = document.getElementById('chapter-container');
+  // set innerHTML
+  container.innerHTML = `
+    <div class="chapter-view" style="display:block;">
+
+      <!-- Hero -->
+      <div class="chapter-hero" style="background:${ch.bgGradient};">
+        <div class="chapter-the">The</div>
+        <div class="chapter-name-display" style="color:${ch.color}">${ch.name.replace('The ', '')}</div>
+        <div class="chapter-tagline">${ch.tagline}</div>
+      </div>
+
+      <!-- Download bar -->
+      <div class="download-bar">
+        <div class="download-bar-text">
+          <strong>💾 Auto-saving to this device</strong>
+          Your reflections save automatically as you type.
+        </div>
+        <button class="download-btn" onclick="downloadChapterPDF('${key}')">📥 Download Reflections</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="chapter-tabs">
+        <button class="chapter-tab active" onclick="switchTab(this,'tab-notalone-${key}')">You Are Not Alone</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-note-${key}')">A Note From Me</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-devotion-${key}')">Devotion</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-story-${key}')">Short Story</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-reflect-${key}')">Reflections</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-playlist-${key}')">Playlist</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-affs-${key}')">Affirmations</button>
+        <button class="chapter-tab" onclick="switchTab(this,'tab-letter-${key}')">Dear ${ch.name.replace('The ','')}</button>
+        ${ch.specialPage ? `<button class="chapter-tab" onclick="switchTab(this,'tab-special-${key}')">${ch.specialTabName || '✦ Special'}</button>` : ''}
+      </div>
+
+      <!-- YOU ARE NOT ALONE -->
+      <div class="content-section active" id="tab-notalone-${key}">
+        <h2 class="section-title">You Are Not Alone</h2>
+        <p style="font-size:13px; color:var(--muted); font-style:italic; margin-bottom:1.5rem;">These words come from women who have sat in the same place. You are not the first. You will not be the last. But you are not alone.</p>
+        ${ch.youAreNotAlone.map(q => `
+          <div class="anon-quote">${q}<cite class="anon-cite">— Anonymous</cite></div>
+        `).join('')}
+
+        <!-- Permission Slip -->
+        <div class="permission-slip" style="margin-top:2rem;">
+          <p class="permission-body">I, <input type="text" class="permission-name-field" placeholder="your name here">, hereby give myself full permission to:</p>
+          <ul class="permission-items">
+            ${ch.permissionItems.map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <p style="font-size:13px; font-style:italic; color:var(--muted); text-align:center; margin:1rem 0;">No guilt. No apology. No explanation needed.</p>
+          <div class="signature-row">
+            <div>
+              <span class="sig-label">Signed</span>
+              <input type="text" class="sig-field" placeholder="your signature">
+            </div>
+            <div>
+              <span class="sig-label">Date</span>
+              <input type="text" class="sig-field" placeholder="today's date" style="min-width:100px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTE FROM ME -->
+      <div class="content-section" id="tab-note-${key}">
+        <h2 class="section-title">A Note From Me</h2>
+        <div class="note-from-me">
+          ${ch.noteFromMe.split('\n\n').map(p => `<p style="margin-bottom:1rem;">${p}</p>`).join('')}
+          <span class="note-signature">De'Audra</span>
+        </div>
+      </div>
+
+      <!-- DEVOTION -->
+      <div class="content-section" id="tab-devotion-${key}">
+        <div class="devotion-scripture">
+          <blockquote>${ch.devotionScripture}</blockquote>
+        </div>
+        <div class="devotion-body">
+          ${ch.devotionBody.split('\n\n').map(p => `<p style="margin-bottom:1rem;">${p}</p>`).join('')}
+        </div>
+        <div class="devotion-reflection">
+          <strong style="display:block; margin-bottom:0.5rem; color:var(--dusty-rose); font-style:normal; font-size:12px; letter-spacing:2px;">REFLECTION</strong>
+          ${ch.devotionReflection}
+          <textarea class="rq-textarea" style="margin-top:1rem;" placeholder="Write your reflection here..." data-save-key="devotion_reflect"></textarea>
+        </div>
+      </div>
+
+      <!-- SHORT STORY -->
+      <div class="content-section" id="tab-story-${key}">
+        <h2 class="section-title">${ch.shortStory.title}</h2>
+        <div class="short-story">
+          ${ch.shortStory.body.split('\n\n').map(p => `<p style="margin-bottom:1rem;">${p}</p>`).join('')}
+        </div>
+        <div class="story-moral">${ch.shortStory.moral}</div>
+      </div>
+
+      <!-- REFLECTIONS -->
+      <div class="content-section" id="tab-reflect-${key}">
+        <h2 class="section-title">Sit With These Questions</h2>
+        <div class="reflection-intro">There are no right answers here — only real ones. Go slowly with these. If something brings up more than you expected, put the journal down and breathe. Come back when you are ready. Your healing has no deadline.</div>
+        ${ch.reflectionQuestions.map((q, i) => `
+          <div class="reflection-question">
+            <div class="rq-number">Question ${i + 1}</div>
+            <div class="rq-text">${q}</div>
+            <textarea class="rq-textarea" placeholder="Write your honest answer here..." data-save-key="reflect_0"></textarea>
+          </div>
+        `).join('')}
+        <div class="gentle-word">
+          <p>${ch.gentleWord.body}</p>
+          <strong>${ch.gentleWord.closing}</strong>
+        </div>
+      </div>
+
+      <!-- PLAYLIST -->
+      <div class="content-section" id="tab-playlist-${key}">
+        <h2 class="section-title">${ch.name}'s Playlist</h2>
+        <p class="playlist-intro">Songs curated for this exact season of her soul. Click any song to search on Apple Music.</p>
+        <div>
+          ${ch.playlist.map(song => `
+            <a href="https://music.apple.com/search?term=${encodeURIComponent(song.title.replace(/"/g,'') + ' ' + song.artist)}" target="_blank" style="text-decoration:none;">
+              <div class="playlist-item" style="cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='var(--parchment)'" onmouseout="this.style.background=''">
+                <div class="music-note">♪</div>
+                <div class="song-info">
+                  <div class="song-title">${song.title}</div>
+                  <div class="song-artist">${song.artist}</div>
+                </div>
+                <div style="font-size:11px; color:var(--gold); letter-spacing:1px;">Open ↗</div>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- AFFIRMATIONS -->
+      <div class="content-section" id="tab-affs-${key}">
+        <h2 class="section-title">Affirmations</h2>
+        <p class="affirmations-intro">Speak these over yourself. Even if your voice shakes.</p>
+        <div>
+          ${ch.affirmations.map(aff => `
+            <div class="affirmation-item" data-check-key="aff_1" onclick="toggleAff(this, 'aff_1'); this.querySelector('.aff-check').textContent=this.classList.contains('checked')?'✓':'';">
+              <div class="aff-check"></div>
+              <div class="aff-text">${aff}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- DEAR GIRL LETTER -->
+      <div class="content-section" id="tab-letter-${key}">
+        <div class="dear-letter">
+          <span class="letter-salutation">${ch.dearLetter.salutation}</span>
+          ${ch.dearLetter.body.split('\n\n').map(p => `<p style="margin-bottom:1rem;">${p}</p>`).join('')}
+          <span class="letter-closing">${ch.dearLetter.closing}</span>
+          <span class="letter-signature">${ch.dearLetter.signature}</span>
+        </div>
+
+        <!-- Letter back -->
+        <div class="letter-back-area" style="margin-top:2rem;">
+          <div class="letter-back-title">${ch.letterBackPrompt}</div>
+          <textarea class="letter-back-textarea" placeholder="Dear Her,&#10;&#10;..." data-save-key="letter_back"></textarea>
+          <div style="margin-top:0.5rem; font-family:'Dancing Script',cursive; font-size:18px; color:var(--dusty-rose);">Love, _______________</div>
+        </div>
+      </div>
+
+      <!-- SPECIAL PAGES (per girl) -->
+      ${ch.specialPage ? `
+      <div class="content-section" id="tab-special-${key}">
+        ${ch.specialPage}
+      </div>
+      ` : ''}
+
+      <!-- Chapter navigation -->
+      <div class="chapter-nav">
+        ${ch.prev ? `<button class="nav-prev" onclick="showChapter('${ch.prev}')">← ${chapters[ch.prev].name}</button>` : '<span></span>'}
+        ${ch.next ? `<button class="nav-next" onclick="showChapter('${ch.next}')">${chapters[ch.next].name} →</button>` : '<button class="nav-next" onclick="showSection(\'becoming-section\')">The Becoming Girl →</button>'}
+      </div>
+
+    </div>
+  `;
+  // Load saved values and setup auto-save
+  setTimeout(() => {
+    loadSavedValues(key);
+    setupAutoSave(key);
+  }, 150);
+}
+
+function toggleAff(el, affKey) {
+  el.classList.toggle('checked');
+  const check = el.querySelector('.aff-check');
+  if (check) check.textContent = el.classList.contains('checked') ? '✓' : '';
+  autoSave(currentChapterKey || 'general', affKey, el.classList.contains('checked'));
+}
+
+function switchTab(btn, tabId) {
+  // Remove active from all tabs in the same tab bar
+  const tabBar = btn.closest('.chapter-tabs');
+  if (tabBar) {
+    tabBar.querySelectorAll('.chapter-tab').forEach(t => t.classList.remove('active'));
+  }
+  // Hide all content sections in chapter container
+  document.getElementById('chapter-container').querySelectorAll('.content-section').forEach(s => {
+    s.classList.remove('active');
+  });
+  // Activate clicked tab and show target section
+  btn.classList.add('active');
+  const target = document.getElementById(tabId);
+  if (target) {
+    target.classList.add('active');
+  }
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════════════════
+// SAVE SYSTEM (cloud + local backup)
+// ══════════════════════════════════════════
+const SAVE_KEY = 'ltmg_journal_v1';
+let saveTimeout = null;
+let currentChapterKey = null;
+
+function getSavedData() {
+  try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function saveDataLocal(data) {
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+function showSaveIndicator() {
+  const el = document.getElementById('save-indicator');
+  if (!el) return;
+  el.classList.add('show');
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+function autoSave(key, field, value) {
+  const data = getSavedData();
+  if (!data[key]) data[key] = {};
+  data[key][field] = value;
+  saveDataLocal(data);
+  if (currentUserEmail) {
+    cloudSave(key, field, value).then(() => showSaveIndicator());
+  } else {
+    showSaveIndicator();
+  }
+}
+
+async function loadSavedValues(chapterKey) {
+  let saved = {};
+  if (currentUserEmail) {
+    saved = await cloudLoad(chapterKey);
+  }
+  if (!saved || !Object.keys(saved).length) {
+    const local = getSavedData();
+    saved = local[chapterKey] || {};
+  }
+  setTimeout(() => {
+    document.querySelectorAll('[data-save-key]').forEach(el => {
+      const k = el.getAttribute('data-save-key');
+      if (saved[k] !== undefined) el.value = saved[k];
+    });
+    document.querySelectorAll('[data-check-key]').forEach(el => {
+      const k = el.getAttribute('data-check-key');
+      if (saved[k]) {
+        el.classList.add('checked');
+        const check = el.querySelector('.aff-check');
+        if (check) check.textContent = '✓';
+      }
+    });
+    loadTrackerState();
+  }, 100);
+}
+
+function setupAutoSave(chapterKey) {
+  currentChapterKey = chapterKey;
+  setTimeout(() => {
+    document.querySelectorAll('[data-save-key]').forEach(el => {
+      el.addEventListener('input', () => {
+        autoSave(chapterKey, el.getAttribute('data-save-key'), el.value);
+      });
+    });
+  }, 200);
+}
+
+// Tracker state
+function saveTrackerState() {
+  const trackerData = {};
+  document.querySelectorAll('.tracker-check').forEach(el => {
+    const id = el.getAttribute('data-tracker-id');
+    if (id) trackerData[id] = el.classList.contains('done');
+  });
+  document.querySelectorAll('.tracker-date-input').forEach(el => {
+    const id = el.getAttribute('data-tracker-date-id');
+    if (id) trackerData[id + '_date'] = el.value;
+  });
+  const data = getSavedData();
+  data['tracker'] = trackerData;
+  saveDataLocal(data);
+  if (currentUserEmail) cloudSaveTracker(trackerData);
+}
+
+async function loadTrackerState() {
+  let saved = {};
+  if (currentUserEmail) {
+    saved = await cloudLoadTracker();
+  }
+  if (!saved || !Object.keys(saved).length) {
+    const local = getSavedData();
+    saved = local['tracker'] || {};
+  }
+  document.querySelectorAll('.tracker-check').forEach(el => {
+    const id = el.getAttribute('data-tracker-id');
+    if (id && saved[id]) { el.classList.add('done'); el.textContent = '✓'; }
+  });
+  document.querySelectorAll('.tracker-date-input').forEach(el => {
+    const id = el.getAttribute('data-tracker-date-id');
+    if (id && saved[id + '_date']) el.value = saved[id + '_date'];
+  });
+}
+
+// ══════════════════════════════════════════
+// WELCOME POPUP
+// ══════════════════════════════════════════
+function checkFirstVisit() {
+  const data = getSavedData();
+  if (!data['_welcomed']) {
+    setTimeout(() => {
+      const popup = document.getElementById('welcome-popup');
+      if (popup) popup.style.display = 'flex';
+    }, 800);
+  }
+}
+
+function closeWelcomePopup() {
+  const popup = document.getElementById('welcome-popup');
+  if (popup) popup.style.display = 'none';
+  const data = getSavedData();
+  data['_welcomed'] = true;
+  saveDataLocal(data);
+  if (currentUserEmail) {
+    fbMerge('users/' + emailToKey(currentUserEmail) + '/journal/_meta', { welcomed: true });
+  }
+}
+
+// ══════════════════════════════════════════
+// DOWNLOAD PDF
+// ══════════════════════════════════════════
+let lastDownloadChapter = null;
+
+function downloadChapterPDF(chapterKey) {
+  const ch = chapters[chapterKey];
+  if (!ch) return;
+  const data = getSavedData();
+  const saved = data[chapterKey] || {};
+
+  const printWindow = window.open('', '_blank');
+  const questions = ch.reflectionQuestions || [];
+
+  let reflectionsHTML = questions.map((q, i) => {
+    const answer = saved['reflect_' + i] || '';
+    return `
+      <div style="margin-bottom:20px;">
+        <p style="font-weight:bold; color:#c9968a; font-size:14px; margin-bottom:8px;">Q${i+1}. ${q}</p>
+        <div style="border:1px solid #e8c4b2; border-radius:8px; padding:12px; min-height:60px; font-size:14px; color:#3d3330; white-space:pre-wrap; font-family:Georgia,serif;">${answer || '<span style="color:#aaa; font-style:italic;">No response recorded</span>'}</div>
+      </div>`;
+  }).join('');
+
+  let devotionReflect = saved['devotion_reflect'] || '';
+  let letterBack = saved['letter_back'] || '';
+
+  printWindow.document.write(`
+    <!DOCTYPE html><html><head>
+    <title>${ch.name} — My Reflections</title>
+    <style>
+      body { font-family: Georgia, serif; color: #3d3330; max-width: 700px; margin: 0 auto; padding: 40px 30px; background: #fdf8f2; }
+      .header { text-align: center; border-bottom: 2px solid #c9a96e; padding-bottom: 20px; margin-bottom: 30px; }
+      .brand { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #c9a96e; margin-bottom: 8px; }
+      .title { font-size: 36px; color: #c9968a; margin-bottom: 4px; }
+      .subtitle { font-size: 16px; font-style: italic; color: #9b7b78; }
+      .section { margin-bottom: 30px; }
+      .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #c9a96e; margin-bottom: 12px; border-bottom: 1px solid #e8d5a3; padding-bottom: 6px; }
+      .response-box { border: 1px solid #e8c4b2; border-radius: 8px; padding: 14px; min-height: 60px; font-size: 14px; white-space: pre-wrap; background: white; }
+      .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e8c4b2; font-size: 11px; letter-spacing: 2px; color: #8a7570; }
+      @media print { body { background: white; } }
+    </style></head><body>
+    <div class="header">
+      <div class="brand">Letters to My Girls — Every Stage of You</div>
+      <div class="title">${ch.name}</div>
+      <div class="subtitle">${ch.tagline}</div>
+      <div style="font-size:12px; color:#8a7570; margin-top:8px;">Downloaded: ${new Date().toLocaleDateString()}</div>
+    </div>
+
+    ${devotionReflect ? `<div class="section">
+      <div class="section-label">Devotion Reflection</div>
+      <div class="response-box">${devotionReflect}</div>
+    </div>` : ''}
+
+    <div class="section">
+      <div class="section-label">My Reflections</div>
+      ${reflectionsHTML}
+    </div>
+
+    ${letterBack ? `<div class="section">
+      <div class="section-label">My Letter Back</div>
+      <div class="response-box">${letterBack}</div>
+    </div>` : ''}
+
+    <div class="footer">urherllc.com &nbsp;|&nbsp; © De'Audra Crawford &nbsp;|&nbsp; @urherllc</div>
+    </body></html>`);
+
+  printWindow.document.close();
+  setTimeout(() => { printWindow.print(); }, 500);
+}
+
+function downloadChapterFromPopup() {
+  document.getElementById('chapter-complete-popup').style.display = 'none';
+  if (lastDownloadChapter) downloadChapterPDF(lastDownloadChapter);
+}
+
+function showChapterCompletePopup(chapterKey) {
+  lastDownloadChapter = chapterKey;
+  document.getElementById('chapter-complete-popup').style.display = 'flex';
+}
+
+// ══════════════════════════════════════════
+// FAQ
+// ══════════════════════════════════════════
+const faqData = [
+  {
+    q: 'Does my progress save when I close the journal?',
+    a: 'Yes! Everything you write auto-saves to the cloud as you type. When you come back and log in with your email, all your reflections will be exactly where you left them — on any device, any browser, anytime.'
+  },
+  {
+    q: 'Can I access my journal on multiple devices?',
+    a: 'Absolutely! Because your journal saves to the cloud, you can pick up right where you left off on your phone, tablet, or laptop. Just visit the journal page and log in with the email you used at checkout.'
+  },
+  {
+    q: 'What happens if I clear my browser history or cache?',
+    a: 'Nothing to worry about! Your journal is saved to the cloud — not your browser. Clearing your cache has no effect on your saved responses. Just log back in with your email and everything will be right there.'
+  },
+  {
+    q: 'How do I download my reflections?',
+    a: 'Click the "Download My Reflections" button at the top of any chapter. It will open a print-friendly version of your responses that you can save as a PDF. Choose "Save as PDF" in your print dialog.'
+  },
+  {
+    q: 'Can I come back to a chapter multiple times?',
+    a: 'Absolutely — that is the whole point! Your journal is yours forever. Come back to any chapter as many times as you need. Your previous responses will still be there and you can add to them anytime.'
+  },
+  {
+    q: 'What is my access code and where do I find it?',
+    a: 'Your unique access code was in your order confirmation email from URHER LLC. You only need it the very first time you set up your journal. After that, just log in with your email — no code needed ever again.'
+  },
+  {
+    q: 'Can I share my access code with someone else?',
+    a: 'Each access code is for personal use only. If someone you love wants their own interactive journal experience, they can purchase their own copy at urherllc.com.'
+  },
+  {
+    q: 'Is the journal mobile friendly?',
+    a: 'Yes! The journal is fully responsive and works beautifully on phones, tablets, and desktops. You can journal from anywhere.'
+  },
+  {
+    q: 'What if I need help or have a question not answered here?',
+    a: 'Reach out to us at urherllc.com or on Instagram @urherllc. We are here for you!'
+  },
+];
+
+function buildFAQ() {
+  const container = document.getElementById('faq-list');
+  if (!container) return;
+  container.innerHTML = faqData.map((item, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-question" onclick="toggleFAQ(${i})">
+        <span>${item.q}</span>
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-answer">${item.a}</div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(i) {
+  const item = document.getElementById('faq-' + i);
+  item.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════
+// CODE GENERATOR (formula-based, unlimited)
+// ══════════════════════════════════════════
+// Secret salt — change this to your own secret word
+const CODE_SALT = 'LTMG_URHER_SECRET_2024';
+
+function generateCode(orderId) {
+  // Simple deterministic code from order number
+  const str = CODE_SALT + orderId.toString().toUpperCase();
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'LTMG';
+  let h = Math.abs(hash);
+  for (let i = 0; i < 6; i++) {
+    code += chars[h % chars.length];
+    h = Math.floor(h / chars.length) + (i * 7);
+  }
+  return code;
+}
+
+function validateFormulaCode(code) {
+  // Try all reasonable order IDs (1-9999) to see if code matches
+  for (let i = 1; i <= 9999; i++) {
+    if (generateCode(i) === code.toUpperCase()) return true;
+  }
+  return false;
+}
+
+// ══════════════════════════════════════════
+// FIREBASE CLOUD SAVE SYSTEM
+// ══════════════════════════════════════════
+const FIREBASE_PROJECT = 'ltmg-journal-urher';
+const FIREBASE_API_KEY = 'AIzaSyKYMAIT4E491sdvMPGDb1P_b-3Y6-yPZM';
+const FIREBASE_DB_URL = 'https://ltmg-journal-urher-default-rtdb.firebaseio.com';
+
+let currentUserEmail = null;
+
+function emailToKey(email) {
+  return email.toLowerCase().replace(/[.#$\[\]@]/g, '_');
+}
+
+async function fbGet(path) {
+  try {
+    const res = await fetch(FIREBASE_DB_URL + '/' + path + '.json');
+    if (!res.ok) return null;
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function fbSet(path, data) {
+  try {
+    const res = await fetch(FIREBASE_DB_URL + '/' + path + '.json', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  } catch(e) { return false; }
+}
+
+async function fbMerge(path, data) {
+  try {
+    const res = await fetch(FIREBASE_DB_URL + '/' + path + '.json', {
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  } catch(e) { return false; }
+}
+
+async function cloudSave(chapterKey, fieldKey, value) {
+  if (!currentUserEmail) return;
+  await fbMerge('users/' + emailToKey(currentUserEmail) + '/journal/' + chapterKey, { [fieldKey]: value });
+}
+
+async function cloudLoad(chapterKey) {
+  if (!currentUserEmail) return {};
+  const data = await fbGet('users/' + emailToKey(currentUserEmail) + '/journal/' + chapterKey);
+  return data || {};
+}
+
+async function cloudSaveTracker(trackerData) {
+  if (!currentUserEmail) return;
+  await fbSet('users/' + emailToKey(currentUserEmail) + '/journal/tracker', trackerData);
+}
+
+async function cloudLoadTracker() {
+  if (!currentUserEmail) return {};
+  const data = await fbGet('users/' + emailToKey(currentUserEmail) + '/journal/tracker');
+  return data || {};
+}
+
+// ══════════════════════════════════════════
+// CLOUD-POWERED ACCESS GATE
+// ══════════════════════════════════════════
+const STATIC_CODES = ['LTMG2024', 'HERJOURNEY', 'URHER2024', 'DEAUDRA', 'LETTERSLTMG'];
+
+async function checkAccess() {
+  var emailInput = document.getElementById('access-email');
+  var codeInput = document.getElementById('access-input');
+  var error = document.getElementById('gate-error');
+  var btn = document.getElementById('gate-btn');
+
+  var email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  var code = codeInput ? codeInput.value.trim().toUpperCase() : '';
+
+  if (!email || email.indexOf('@') === -1) {
+    error.textContent = 'Please enter a valid email address.';
+    error.style.display = 'block';
+    return;
+  }
+
+  // Step 1: Validate code instantly (no network)
+  var isValid = STATIC_CODES.indexOf(code) !== -1;
+  if (!isValid && code.indexOf('LTMG') === 0 && code.length === 10) {
+    isValid = validateFormulaCode(code);
+  }
+
+  btn.textContent = 'Checking...';
+  btn.disabled = true;
+
+  // Step 2: Check Firebase for returning user (with timeout)
+  var existingUser = null;
+  try {
+    existingUser = await Promise.race([
+      fbGet('users/' + emailToKey(email) + '/profile'),
+      new Promise(function(resolve) { setTimeout(function() { resolve(null); }, 5000); })
+    ]);
+  } catch(e) { existingUser = null; }
+
+  // Returning user - let them in with email only
+  if (existingUser && existingUser.verified) {
+    currentUserEmail = email;
+    grantAccess();
+    return;
+  }
+
+  // New user - need valid code
+  if (!isValid) {
+    error.textContent = 'Code not found. Please check your order confirmation email.';
+    error.style.display = 'block';
+    btn.textContent = 'Enter My Journal';
+    btn.disabled = false;
+    if (codeInput) codeInput.style.borderColor = 'var(--dusty-rose)';
+    return;
+  }
+
+  // Save new user to Firebase
+  try {
+    await fbSet('users/' + emailToKey(email) + '/profile', {
+      email: email, verified: true, code_used: code, joined: new Date().toISOString()
+    });
+  } catch(e) {}
+
+  currentUserEmail = email;
+  grantAccess();
+}
+
+function grantAccess() {
+  document.getElementById('access-gate').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildResultsList();
+  buildTracker();
+  buildBecomingAffirmations();
+  buildFAQ();
+  checkFirstVisit();
+  document.getElementById('gate-error').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var emailEl = document.getElementById('access-email');
+  var codeEl = document.getElementById('access-input');
+  if (emailEl) emailEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAccess(); });
+  if (codeEl) codeEl.addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAccess(); });
+});
+
+</script>
